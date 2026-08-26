@@ -19,8 +19,82 @@
   }
 }
 
+/* ── Base ────────────────────────────────────────── */
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+}
+
+/* ── Custom Scrollbar ────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.25);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.45);
+}
+
+/* ── Ambient Background Glow ─────────────────────── */
+@keyframes ambient-drift {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.18;
+  }
+  25% {
+    transform: translate(40px, -30px) scale(1.1);
+    opacity: 0.25;
+  }
+  50% {
+    transform: translate(-20px, 20px) scale(0.95);
+    opacity: 0.15;
+  }
+  75% {
+    transform: translate(-40px, -10px) scale(1.05);
+    opacity: 0.22;
+  }
+}
+
+@keyframes ambient-drift-alt {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.12;
+  }
+  33% {
+    transform: translate(-50px, 30px) scale(1.12);
+    opacity: 0.2;
+  }
+  66% {
+    transform: translate(30px, -40px) scale(0.92);
+    opacity: 0.1;
+  }
+}
+
+/* ── Scroll Hint Bounce ──────────────────────────── */
+@keyframes scroll-hint-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(6px);
+    opacity: 1;
+  }
+}
+
+/* ── Smooth Focus Ring ───────────────────────────── */
+*:focus-visible {
+  outline: 2px solid rgba(99, 102, 241, 0.6);
+  outline-offset: 2px;
+  border-radius: 8px;
 }
