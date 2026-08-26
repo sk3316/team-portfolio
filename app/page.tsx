@@ -5,11 +5,13 @@ import React, { useState, useMemo, useEffect, useCallback } from "react";
 import {
   portfolioData,
   SubTeam,
+  TeamMember,
   getMembersBySubTeam,
 } from "@/data/portfolio-data";
 import LeftMemberDial from "@/components/LeftMemberDial";
 import RightSubTeamDial from "@/components/RightSubTeamDial";
 import CenterStage from "@/components/CenterStage";
+import MobileNavigation from "@/components/MobileNavigation";
 import { Layers } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -26,18 +28,21 @@ export default function Page() {
     return getMembersBySubTeam(selectedSubTeam.id);
   }, [selectedSubTeam]);
 
-  // Derive active member purely
-  const activeMember = useMemo(() => {
+  // Derive active member purely from the filtered pool
+  const activeMember = useMemo<TeamMember | null>(() => {
     const found = filteredMembers.find((m) => m.id === selectedMemberId);
-    return found || filteredMembers[0] || null;
+    return found ?? filteredMembers[0] ?? null;
   }, [filteredMembers, selectedMemberId]);
 
-  // Sync selectedMemberId when active member changes on sub-team switch
-  useEffect(() => {
-    if (activeMember && activeMember.id !== selectedMemberId) {
-      setSelectedMemberId(activeMember.id);
-    }
-  }, [activeMember, selectedMemberId]);
+  // Sub-team change handler: reconcile member selection smoothly
+  const handleSelectSubTeam = useCallback((subTeam: SubTeam) => {
+    const nextPool = getMembersBySubTeam(subTeam.id);
+    setSelectedSubTeam(subTeam);
+    setSelectedMemberId((current) => {
+      const stillThere = nextPool.find((m) => m.id === current);
+      return stillThere ? current : nextPool[0]?.id ?? current;
+    });
+  }, []);
 
   // Keyboard navigation support (ArrowUp/Down for members, ArrowLeft/Right for sub-teams)
   const handleKeyDown = useCallback(
@@ -65,12 +70,13 @@ export default function Page() {
           Math.max(currentSubIndex + direction, 0),
           portfolioData.subTeams.length - 1,
         );
-        if (portfolioData.subTeams[nextSubIndex]) {
-          setSelectedSubTeam(portfolioData.subTeams[nextSubIndex]);
+        const nextSubTeam = portfolioData.subTeams[nextSubIndex];
+        if (nextSubTeam) {
+          handleSelectSubTeam(nextSubTeam);
         }
       }
     },
-    [filteredMembers, activeMember, selectedSubTeam],
+    [filteredMembers, activeMember, selectedSubTeam, handleSelectSubTeam],
   );
 
   useEffect(() => {
@@ -98,22 +104,22 @@ export default function Page() {
         />
       </div>
 
-      {/* ── Top Bar Navigation ──────────────────── */}
+      {/* ── Top Bar Header ──────────────────── */}
       <motion.header
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full px-8 py-4 flex items-center justify-between border-b border-neutral-900/80 bg-neutral-950/80 backdrop-blur-md z-30 flex-shrink-0"
+        className="w-full px-4 sm:px-8 py-3.5 sm:py-4 flex items-center justify-between border-b border-neutral-900/80 bg-neutral-950/80 backdrop-blur-md z-30 flex-shrink-0"
       >
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-sm shadow-[0_0_15px_rgba(99,102,241,0.5)]">
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-xs sm:text-sm shadow-[0_0_15px_rgba(99,102,241,0.5)]">
             N
           </div>
           <div>
-            <h1 className="text-sm font-bold tracking-tight">
+            <h1 className="text-xs sm:text-sm font-bold tracking-tight">
               {portfolioData.teamInfo.name}
             </h1>
-            <p className="text-[11px] text-neutral-400">
+            <p className="text-[10px] sm:text-[11px] text-neutral-400 hidden sm:block">
               {portfolioData.teamInfo.tagline}
             </p>
           </div>
@@ -125,21 +131,21 @@ export default function Page() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
-          className="flex items-center gap-3 bg-neutral-900/80 border border-neutral-800 px-3.5 py-1.5 rounded-full text-xs text-neutral-400"
+          className="flex items-center gap-2 sm:gap-3 bg-neutral-900/80 border border-neutral-800 px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs text-neutral-400"
         >
-          <Layers className="w-3.5 h-3.5 text-indigo-400" />
+          <Layers className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-indigo-400" />
           <span>
-            Scope:{" "}
+            <span className="hidden sm:inline">Scope: </span>
             <strong className="text-white font-medium">
               {selectedSubTeam.name}
             </strong>
           </span>
-          <span className="w-1 h-1 rounded-full bg-neutral-600" />
+          <span className="w-1 h-1 rounded-full bg-neutral-600 hidden sm:inline-block" />
           <motion.span
             key={filteredMembers.length}
             initial={{ opacity: 0, y: -4 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-indigo-400 font-medium"
+            className="text-indigo-400 font-medium hidden sm:inline-block"
           >
             {filteredMembers.length}{" "}
             {filteredMembers.length === 1 ? "member" : "members"}
@@ -147,24 +153,38 @@ export default function Page() {
         </motion.div>
       </motion.header>
 
-      {/* ── Main Viewport: Dual Dials + Center Stage ── */}
-      <div className="relative flex-1 w-full h-full flex items-center justify-center overflow-hidden">
-        {/* Left Member Rotary Dial */}
-        <LeftMemberDial
-          members={filteredMembers}
-          selectedMemberId={activeMember?.id || ""}
-          onSelectMember={(member) => setSelectedMemberId(member.id)}
-        />
+      {/* ── Mobile & Tablet Navigation (< lg) ── */}
+      <MobileNavigation
+        subTeams={portfolioData.subTeams}
+        selectedSubTeamId={selectedSubTeam.id}
+        onSelectSubTeam={handleSelectSubTeam}
+        members={filteredMembers}
+        selectedMemberId={activeMember?.id || ""}
+        onSelectMember={(member) => setSelectedMemberId(member.id)}
+      />
 
-        {/* Center Stage Showcase */}
+      {/* ── Main Viewport: Desktop Dual Dials + Center Stage ── */}
+      <div className="relative flex-1 min-h-0 w-full overflow-y-auto lg:overflow-hidden flex flex-col lg:flex-row items-center justify-start lg:justify-center p-2 sm:p-4 lg:p-0">
+        {/* Desktop Left Rotary Dial (lg+) */}
+        <div className="hidden lg:block">
+          <LeftMemberDial
+            members={filteredMembers}
+            selectedMemberId={activeMember?.id || ""}
+            onSelectMember={(member) => setSelectedMemberId(member.id)}
+          />
+        </div>
+
+        {/* Center Stage Showcase (All screens) */}
         <CenterStage member={activeMember} activeSubTeam={selectedSubTeam} />
 
-        {/* Right Sub-Team Rotary Dial */}
-        <RightSubTeamDial
-          subTeams={portfolioData.subTeams}
-          selectedSubTeamId={selectedSubTeam.id}
-          onSelectSubTeam={(subTeam) => setSelectedSubTeam(subTeam)}
-        />
+        {/* Desktop Right Rotary Dial (lg+) */}
+        <div className="hidden lg:block">
+          <RightSubTeamDial
+            subTeams={portfolioData.subTeams}
+            selectedSubTeamId={selectedSubTeam.id}
+            onSelectSubTeam={handleSelectSubTeam}
+          />
+        </div>
       </div>
     </main>
   );

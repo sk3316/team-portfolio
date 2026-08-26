@@ -33,8 +33,8 @@ export default function CenterStage({
   }
 
   return (
-    <div className="z-10 w-full max-w-2xl mx-auto px-6 flex flex-col justify-center select-none">
-      <div className="relative min-h-[500px] flex flex-col justify-center">
+    <div className="z-10 w-full max-w-2xl mx-auto py-2 sm:py-4 lg:py-8 flex flex-col my-auto select-none">
+      <div className="relative min-h-[300px] lg:min-h-[500px] flex flex-col justify-center w-full">
         <AnimatePresence mode="wait">
           <motion.div
             key={member.id}
@@ -42,7 +42,7 @@ export default function CenterStage({
             animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
             exit={{ opacity: 0, scale: 0.985, filter: "blur(4px)" }}
             transition={{ duration: 0.22, ease: smoothEase }}
-            className="relative w-full bg-neutral-900/85 border border-neutral-800/80 backdrop-blur-2xl rounded-3xl p-6 md:p-8 shadow-2xl overflow-hidden group/card"
+            className="relative w-full bg-neutral-900/85 border border-neutral-800/80 backdrop-blur-2xl rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-2xl overflow-hidden group/card"
           >
             {/* Animated gradient border shimmer */}
             <div className="absolute inset-0 rounded-3xl opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 pointer-events-none">
@@ -53,23 +53,23 @@ export default function CenterStage({
             <div className="absolute top-0 right-0 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none -z-10" />
 
             {/* Header Info */}
-            <div className="flex items-start justify-between border-b border-neutral-800/80 pb-5">
+            <div className="flex flex-col sm:flex-row sm:items-start justify-between border-b border-neutral-800/80 pb-4 sm:pb-5 gap-3">
               <div>
-                <div className="flex items-center gap-2 mb-2">
+                <div className="flex items-center gap-2 mb-1.5 sm:mb-2">
                   <span className="px-2.5 py-0.5 rounded-full text-[10px] uppercase font-bold tracking-wider bg-indigo-950/80 text-indigo-400 border border-indigo-800/60">
                     {activeSubTeam?.name || "Core Member"}
                   </span>
                 </div>
-                <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-white">
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-white">
                   {member.name}
                 </h1>
-                <p className="text-sm font-medium text-indigo-400/90 mt-0.5">
+                <p className="text-xs sm:text-sm font-medium text-indigo-400/90 mt-0.5">
                   {member.role}
                 </p>
               </div>
 
               {/* Social Connect Icons */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2">
                 {member.socialLinks.github && (
                   <a
                     href={member.socialLinks.github}
@@ -78,7 +78,7 @@ export default function CenterStage({
                     className="p-2 rounded-xl bg-neutral-800/60 hover:bg-indigo-600/20 text-neutral-400 hover:text-white hover:scale-110 transition-all duration-200"
                     aria-label="GitHub Profile"
                   >
-                    <Github className="w-4 h-4" />
+                    <Github className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
                   </a>
                 )}
                 {member.socialLinks.linkedin && (
@@ -89,7 +89,7 @@ export default function CenterStage({
                     className="p-2 rounded-xl bg-neutral-800/60 hover:bg-indigo-600/20 text-neutral-400 hover:text-white hover:scale-110 transition-all duration-200"
                     aria-label="LinkedIn Profile"
                   >
-                    <Linkedin className="w-4 h-4" />
+                    <Linkedin className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
                   </a>
                 )}
                 {member.socialLinks.twitter && (
@@ -100,7 +100,7 @@ export default function CenterStage({
                     className="p-2 rounded-xl bg-neutral-800/60 hover:bg-indigo-600/20 text-neutral-400 hover:text-white hover:scale-110 transition-all duration-200"
                     aria-label="Twitter Profile"
                   >
-                    <Twitter className="w-4 h-4" />
+                    <Twitter className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
                   </a>
                 )}
                 {member.socialLinks.website && (
@@ -111,29 +111,29 @@ export default function CenterStage({
                     className="p-2 rounded-xl bg-neutral-800/60 hover:bg-indigo-600/20 text-neutral-400 hover:text-white hover:scale-110 transition-all duration-200"
                     aria-label="Personal Website"
                   >
-                    <Globe className="w-4 h-4" />
+                    <Globe className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
                   </a>
                 )}
               </div>
             </div>
 
             {/* Bio Summary */}
-            <div className="mt-4">
-              <p className="text-sm text-neutral-300 leading-relaxed font-normal">
+            <div className="mt-3.5 sm:mt-4">
+              <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed font-normal">
                 {member.bio}
               </p>
             </div>
 
             {/* Skills Matrix */}
-            <div className="mt-5">
-              <h2 className="text-[11px] uppercase tracking-wider font-bold text-neutral-400 mb-2.5">
+            <div className="mt-4 sm:mt-5">
+              <h2 className="text-[10px] sm:text-[11px] uppercase tracking-wider font-bold text-neutral-400 mb-2">
                 Core Skills & Technologies
               </h2>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5 sm:gap-2">
                 {member.skills.map((skill) => (
                   <span
                     key={skill}
-                    className="px-2.5 py-1 bg-neutral-800/60 border border-neutral-700/60 rounded-lg text-xs font-medium text-neutral-300 hover:bg-indigo-950/40 hover:border-indigo-700/50 hover:text-indigo-300 transition-all duration-200 cursor-default"
+                    className="px-2 sm:px-2.5 py-0.5 sm:py-1 bg-neutral-800/60 border border-neutral-700/60 rounded-lg text-[11px] sm:text-xs font-medium text-neutral-300 hover:bg-indigo-950/40 hover:border-indigo-700/50 hover:text-indigo-300 transition-all duration-200 cursor-default"
                   >
                     {skill}
                   </span>
@@ -142,20 +142,20 @@ export default function CenterStage({
             </div>
 
             {/* Featured Projects Grid */}
-            <div className="mt-6">
-              <h2 className="text-[11px] uppercase tracking-wider font-bold text-neutral-400 mb-2.5 flex items-center gap-1.5">
+            <div className="mt-4 sm:mt-6">
+              <h2 className="text-[10px] sm:text-[11px] uppercase tracking-wider font-bold text-neutral-400 mb-2 sm:mb-2.5 flex items-center gap-1.5">
                 <Code2 className="w-3.5 h-3.5 text-indigo-400" />
                 Featured Projects
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
                 {member.featuredProjects.map((project) => (
                   <div
                     key={project.title}
-                    className="p-3.5 rounded-2xl bg-neutral-800/30 border border-neutral-800 hover:border-indigo-600/40 hover:bg-neutral-800/50 hover:shadow-[0_4px_24px_rgba(99,102,241,0.08)] transition-all duration-200 flex flex-col justify-between group/project"
+                    className="p-3 sm:p-3.5 rounded-2xl bg-neutral-800/30 border border-neutral-800 hover:border-indigo-600/40 hover:bg-neutral-800/50 hover:shadow-[0_4px_24px_rgba(99,102,241,0.08)] transition-all duration-200 flex flex-col justify-between group/project"
                   >
                     <div>
                       <div className="flex items-center justify-between">
-                        <h3 className="text-sm font-semibold text-white group-hover/project:text-indigo-300 transition-colors duration-200">
+                        <h3 className="text-xs sm:text-sm font-semibold text-white group-hover/project:text-indigo-300 transition-colors duration-200">
                           {project.title}
                         </h3>
                         <div className="flex items-center gap-1.5">
@@ -183,7 +183,7 @@ export default function CenterStage({
                           )}
                         </div>
                       </div>
-                      <p className="text-xs text-neutral-400 mt-1 leading-relaxed line-clamp-2">
+                      <p className="text-[11px] sm:text-xs text-neutral-400 mt-1 leading-relaxed line-clamp-2">
                         {project.description}
                       </p>
                     </div>
@@ -191,7 +191,7 @@ export default function CenterStage({
                       {project.technologies.map((tech) => (
                         <span
                           key={tech}
-                          className="text-[10px] px-2 py-0.5 rounded bg-indigo-950/40 text-indigo-300 border border-indigo-800/30 font-medium"
+                          className="text-[9px] sm:text-[10px] px-1.5 sm:px-2 py-0.5 rounded bg-indigo-950/40 text-indigo-300 border border-indigo-800/30 font-medium"
                         >
                           {tech}
                         </span>

@@ -98,3 +98,13 @@ body {
   outline-offset: 2px;
   border-radius: 8px;
 }
+
+/* ── Hide Scrollbars for Touch Rails ─────────────── */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
