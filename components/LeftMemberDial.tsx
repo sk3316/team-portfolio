@@ -27,10 +27,10 @@ export default function LeftMemberDial({
   const wheelAccumulator = useRef(0);
   const lastScrollTime = useRef(0);
 
-  // Radial Geometry Constants
+  // Radial Geometry Constants (Compact & Fluid for 14"/15.6" laptops + large monitors)
   const angleStep = 24; // Degrees between avatar nodes
-  const radius = 300; // Radius of circular arc
-  const originX = -120; // Virtual center off-screen to the left
+  const radius = 260; // Radius of circular arc
+  const originX = -130; // Virtual center off-screen to the left
 
   // Smooth, throttled scroll wheel navigation
   const handleWheel = useCallback(
@@ -69,12 +69,12 @@ export default function LeftMemberDial({
   return (
     <div
       onWheel={handleWheel}
-      className="absolute left-0 top-0 bottom-0 w-72 select-none z-20 flex items-center justify-start pointer-events-auto"
+      className="absolute left-0 top-0 bottom-0 w-64 select-none z-20 flex items-center justify-start pointer-events-auto"
       style={{ touchAction: "none" }}
     >
       {/* Faint Orbit Guideline */}
       <svg
-        className="absolute left-0 top-1/2 -translate-y-1/2 w-80 h-[600px] pointer-events-none opacity-20"
+        className="absolute left-0 top-1/2 -translate-y-1/2 w-72 h-[600px] pointer-events-none opacity-20"
         style={{ overflow: "visible" }}
       >
         <circle
@@ -90,9 +90,9 @@ export default function LeftMemberDial({
       </svg>
 
       {/* Focal Apex Indicator (Aligned with selected node at 0 degrees) */}
-      <div className="absolute left-[180px] top-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-none z-30">
+      <div className="absolute left-[130px] top-1/2 -translate-y-1/2 flex items-center gap-1.5 pointer-events-none z-30">
         <div className="w-2.5 h-2.5 rounded-full bg-indigo-400 shadow-[0_0_14px_rgba(129,140,248,1)] animate-pulse" />
-        <div className="w-8 h-[1.5px] bg-gradient-to-r from-indigo-500/80 to-transparent" />
+        <div className="w-6 h-[1.5px] bg-gradient-to-r from-indigo-500/80 to-transparent" />
       </div>
 
       {/* Scroll Hint */}
@@ -102,7 +102,7 @@ export default function LeftMemberDial({
             initial={{ opacity: 0, y: -4 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 6, transition: { duration: 0.25 } }}
-            className="absolute left-6 bottom-8 z-40 flex flex-col items-center gap-1 pointer-events-none"
+            className="absolute left-5 bottom-8 z-40 flex flex-col items-center gap-1 pointer-events-none"
           >
             <span className="text-[10px] font-medium text-neutral-500 tracking-wide uppercase">
               Scroll to browse
@@ -134,7 +134,7 @@ export default function LeftMemberDial({
           // Cull nodes beyond 3 steps
           if (distance > 3) return null;
 
-          const scale = isSelected ? 1.22 : Math.max(0.68, 1 - distance * 0.12);
+          const scale = isSelected ? 1.18 : Math.max(0.68, 1 - distance * 0.12);
           const opacity = isSelected ? 1 : Math.max(0.2, 1 - distance * 0.26);
 
           return (
@@ -154,22 +154,22 @@ export default function LeftMemberDial({
                 mass: 0.8,
               }}
               onClick={() => onSelectMember(member)}
-              className="absolute left-0 top-1/2 -translate-y-1/2 cursor-pointer group flex items-center gap-3.5"
+              className="absolute left-0 top-1/2 -translate-y-1/2 cursor-pointer group flex items-center gap-2.5"
               style={{ zIndex: isSelected ? 20 : 10 - distance }}
             >
               {/* Avatar Bubble */}
               <div
-                className={`relative w-13 h-13 rounded-full p-0.5 transition-all duration-300 ${
+                className={`relative w-12 h-12 rounded-full p-0.5 transition-all duration-300 ${
                   isSelected
-                    ? "ring-4 ring-indigo-500/60 shadow-[0_0_24px_rgba(99,102,241,0.7)] border-2 border-indigo-400 scale-105"
+                    ? "ring-3 ring-indigo-500/60 shadow-[0_0_24px_rgba(99,102,241,0.7)] border-2 border-indigo-400 scale-105"
                     : "border border-neutral-700/80 bg-neutral-900 group-hover:border-indigo-400/60 group-hover:scale-105 group-hover:shadow-[0_0_12px_rgba(99,102,241,0.25)]"
                 }`}
               >
                 <Image
                   src={member.avatarUrl}
                   alt={member.name}
-                  width={52}
-                  height={52}
+                  width={48}
+                  height={48}
                   className={`w-full h-full rounded-full object-cover transition-all duration-300 ${
                     isSelected
                       ? "grayscale-0"
@@ -186,14 +186,14 @@ export default function LeftMemberDial({
                   scale: isSelected ? 1 : 0.95,
                 }}
                 transition={{ duration: 0.2, ease: "easeOut" }}
-                className={`pointer-events-none whitespace-nowrap bg-neutral-900/90 border border-neutral-800 backdrop-blur-md px-2.5 py-1 rounded-xl shadow-lg ${
+                className={`pointer-events-none whitespace-nowrap bg-neutral-900/90 border border-neutral-800 backdrop-blur-md px-2.5 py-1 rounded-xl shadow-lg max-w-[130px] ${
                   isSelected ? "block" : "hidden"
                 }`}
               >
-                <p className="text-xs font-semibold text-white tracking-tight leading-tight">
+                <p className="text-xs font-semibold text-white tracking-tight leading-tight truncate">
                   {member.name}
                 </p>
-                <p className="text-[10px] font-medium text-indigo-400 leading-tight">
+                <p className="text-[9.5px] font-medium text-indigo-400 leading-tight truncate">
                   {member.role}
                 </p>
               </motion.div>

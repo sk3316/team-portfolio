@@ -121,7 +121,7 @@ export default function Page() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full px-4 sm:px-8 py-3.5 sm:py-4 flex items-center justify-between border-b border-neutral-900/80 bg-neutral-950/80 backdrop-blur-md z-30 flex-shrink-0"
+        className="w-full px-4 sm:px-8 py-3 sm:py-3.5 flex items-center justify-between border-b border-neutral-900/80 bg-neutral-950/85 backdrop-blur-md z-30 flex-shrink-0"
       >
         <div className="flex items-center gap-2.5 sm:gap-3">
           <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-xs sm:text-sm shadow-[0_0_15px_rgba(99,102,241,0.5)]">
@@ -165,20 +165,22 @@ export default function Page() {
         </motion.div>
       </motion.header>
 
-      {/* ── Mobile & Tablet Navigation (< lg) ── */}
-      <MobileNavigation
-        subTeams={portfolioData.subTeams}
-        selectedSubTeamId={selectedSubTeam.id}
-        onSelectSubTeam={handleSelectSubTeam}
-        members={filteredMembers}
-        selectedMemberId={activeMember?.id || ""}
-        onSelectMember={(member) => setSelectedMemberId(member.id)}
-      />
+      {/* ── Mobile & Tablet Navigation (< xl: screens under 1280px) ── */}
+      <div className="block xl:hidden flex-shrink-0 z-20">
+        <MobileNavigation
+          subTeams={portfolioData.subTeams}
+          selectedSubTeamId={selectedSubTeam.id}
+          onSelectSubTeam={handleSelectSubTeam}
+          members={filteredMembers}
+          selectedMemberId={activeMember?.id || ""}
+          onSelectMember={(member) => setSelectedMemberId(member.id)}
+        />
+      </div>
 
-      {/* ── Main Viewport: Desktop Dual Dials + Center Stage ── */}
-      <div className="relative flex-1 min-h-0 w-full overflow-hidden flex flex-col lg:flex-row items-stretch lg:items-center justify-start lg:justify-center p-2 sm:p-4 lg:p-0">
-        {/* Desktop Left Rotary Dial (lg+) */}
-        <div className="hidden lg:block">
+      {/* ── Main Viewport: Desktop Dual Dials (xl+) + Center Stage ── */}
+      <div className="relative flex-1 min-h-0 w-full overflow-hidden flex flex-col xl:flex-row items-center justify-center p-2 sm:p-3 xl:p-0">
+        {/* Desktop Left Rotary Dial (xl+) */}
+        <div className="hidden xl:block">
           <LeftMemberDial
             members={filteredMembers}
             selectedMemberId={activeMember?.id || ""}
@@ -187,14 +189,16 @@ export default function Page() {
         </div>
 
         {/* Center Stage Showcase (All screens) */}
-        <CenterStage
-          member={activeMember}
-          activeSubTeam={selectedSubTeam}
-          onSelectProject={(project) => setActiveProject(project)}
-        />
+        <div className="relative w-full h-full min-h-0 flex flex-col items-center justify-center">
+          <CenterStage
+            member={activeMember}
+            activeSubTeam={selectedSubTeam}
+            onSelectProject={(project) => setActiveProject(project)}
+          />
+        </div>
 
-        {/* Desktop Right Rotary Dial (lg+) */}
-        <div className="hidden lg:block">
+        {/* Desktop Right Rotary Dial (xl+) */}
+        <div className="hidden xl:block">
           <RightSubTeamDial
             subTeams={portfolioData.subTeams}
             selectedSubTeamId={selectedSubTeam.id}
@@ -203,7 +207,7 @@ export default function Page() {
         </div>
       </div>
 
-      {/* ── Project Deep-Dive Modal (Phase 8) ── */}
+      {/* ── Project Deep-Dive Modal ── */}
       <ProjectModal
         project={activeProject}
         isOpen={!!activeProject}
