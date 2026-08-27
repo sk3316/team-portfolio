@@ -109,7 +109,9 @@ export default function LeftMemberDial({
             </span>
             <ChevronDown
               className="w-3.5 h-3.5 text-indigo-400"
-              style={{ animation: "scroll-hint-bounce 1.5s ease-in-out infinite" }}
+              style={{
+                animation: "scroll-hint-bounce 1.5s ease-in-out infinite",
+              }}
             />
           </motion.div>
         )}

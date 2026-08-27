@@ -108,3 +108,29 @@ body {
   scrollbar-width: none;
 }
 
+/* ── Custom Card Scrollbar ───────────────────────── */
+.custom-card-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(99, 102, 241, 0.4) transparent;
+  scroll-behavior: smooth;
+}
+
+.custom-card-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+
+.custom-card-scroll::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 4px 0;
+}
+
+.custom-card-scroll::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.35);
+  border-radius: 9999px;
+}
+
+.custom-card-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.65);
+}
+
+

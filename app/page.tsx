@@ -6,12 +6,14 @@ import {
   portfolioData,
   SubTeam,
   TeamMember,
+  Project,
   getMembersBySubTeam,
 } from "@/data/portfolio-data";
 import LeftMemberDial from "@/components/LeftMemberDial";
 import RightSubTeamDial from "@/components/RightSubTeamDial";
 import CenterStage from "@/components/CenterStage";
 import MobileNavigation from "@/components/MobileNavigation";
+import ProjectModal from "@/components/ProjectModal";
 import { Layers } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -22,6 +24,7 @@ export default function Page() {
   const [selectedMemberId, setSelectedMemberId] = useState<string>(
     portfolioData.members[0].id,
   );
+  const [activeProject, setActiveProject] = useState<Project | null>(null);
 
   // Filter members based on chosen sub-team
   const filteredMembers = useMemo(() => {
@@ -40,13 +43,16 @@ export default function Page() {
     setSelectedSubTeam(subTeam);
     setSelectedMemberId((current) => {
       const stillThere = nextPool.find((m) => m.id === current);
-      return stillThere ? current : nextPool[0]?.id ?? current;
+      return stillThere ? current : (nextPool[0]?.id ?? current);
     });
   }, []);
 
   // Keyboard navigation support (ArrowUp/Down for members, ArrowLeft/Right for sub-teams)
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
+      // Do not navigate dials if modal is open
+      if (activeProject) return;
+
       if (e.key === "ArrowDown" || e.key === "ArrowUp") {
         e.preventDefault();
         const currentIndex = filteredMembers.findIndex(
@@ -76,7 +82,13 @@ export default function Page() {
         }
       }
     },
-    [filteredMembers, activeMember, selectedSubTeam, handleSelectSubTeam],
+    [
+      filteredMembers,
+      activeMember,
+      selectedSubTeam,
+      handleSelectSubTeam,
+      activeProject,
+    ],
   );
 
   useEffect(() => {
@@ -164,7 +176,7 @@ export default function Page() {
       />
 
       {/* ── Main Viewport: Desktop Dual Dials + Center Stage ── */}
-      <div className="relative flex-1 min-h-0 w-full overflow-y-auto lg:overflow-hidden flex flex-col lg:flex-row items-center justify-start lg:justify-center p-2 sm:p-4 lg:p-0">
+      <div className="relative flex-1 min-h-0 w-full overflow-hidden flex flex-col lg:flex-row items-stretch lg:items-center justify-start lg:justify-center p-2 sm:p-4 lg:p-0">
         {/* Desktop Left Rotary Dial (lg+) */}
         <div className="hidden lg:block">
           <LeftMemberDial
@@ -175,7 +187,11 @@ export default function Page() {
         </div>
 
         {/* Center Stage Showcase (All screens) */}
-        <CenterStage member={activeMember} activeSubTeam={selectedSubTeam} />
+        <CenterStage
+          member={activeMember}
+          activeSubTeam={selectedSubTeam}
+          onSelectProject={(project) => setActiveProject(project)}
+        />
 
         {/* Desktop Right Rotary Dial (lg+) */}
         <div className="hidden lg:block">
@@ -186,6 +202,14 @@ export default function Page() {
           />
         </div>
       </div>
+
+      {/* ── Project Deep-Dive Modal (Phase 8) ── */}
+      <ProjectModal
+        project={activeProject}
+        isOpen={!!activeProject}
+        onClose={() => setActiveProject(null)}
+        authorName={activeMember?.name || "Nexus Engineer"}
+      />
     </main>
   );
 }
