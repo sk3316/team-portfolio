@@ -11,6 +11,7 @@ import {
   X,
   ArrowUpRight,
   ShieldCheck,
+  Presentation,
 } from "lucide-react";
 
 export type NavTab = "home" | "members" | "contact";
@@ -20,6 +21,7 @@ interface HeaderProps {
   onSelectTab: (tab: NavTab) => void;
   selectedSubTeamName?: string;
   memberCount?: number;
+  onOpenPPTStudio?: () => void;
 }
 
 export default function Header({
@@ -27,6 +29,7 @@ export default function Header({
   onSelectTab,
   selectedSubTeamName,
   memberCount,
+  onOpenPPTStudio,
 }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -158,6 +161,18 @@ export default function Header({
             </motion.div>
           )}
 
+          {/* PPT Studio Button */}
+          {onOpenPPTStudio && (
+            <button
+              type="button"
+              onClick={onOpenPPTStudio}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-950/60 hover:bg-indigo-900/80 border border-indigo-500/40 text-xs font-semibold text-indigo-300 hover:text-white transition-all duration-200 shadow-[0_0_12px_rgba(99,102,241,0.2)] cursor-pointer"
+            >
+              <Presentation className="w-3.5 h-3.5 text-indigo-400" />
+              <span>PPT Studio</span>
+            </button>
+          )}
+
           {/* Quick CTA to Contact / Schedule */}
           {activeTab !== "contact" && (
             <button
@@ -235,6 +250,27 @@ export default function Header({
                 </button>
               );
             })}
+
+            {onOpenPPTStudio && (
+              <button
+                type="button"
+                onClick={() => {
+                  onOpenPPTStudio();
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-left bg-indigo-950/50 border border-indigo-500/40 text-indigo-200 hover:text-white transition-all"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-indigo-600 text-white shadow-[0_0_10px_rgba(99,102,241,0.4)]">
+                    <Presentation className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-white">PPT Studio</div>
+                    <div className="text-[11px] text-indigo-300">Generate & Duplicate Presentations</div>
+                  </div>
+                </div>
+              </button>
+            )}
 
             <div className="pt-2 border-t border-neutral-900 flex items-center justify-between text-xs text-neutral-400 px-2">
               <span className="flex items-center gap-1.5">

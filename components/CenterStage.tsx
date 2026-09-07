@@ -17,12 +17,16 @@ import {
   GraduationCap,
   Award,
   ShieldCheck,
+  Presentation,
+  FileDown,
 } from "lucide-react";
+import { downloadCandidatePPT } from "@/lib/pptx/nativePptxGenerator";
 
 interface CenterStageProps {
   member: TeamMember | null;
   activeSubTeam: SubTeam | null;
   onSelectProject: (project: Project) => void;
+  onOpenPPTStudio?: () => void;
 }
 
 const smoothEase: [number, number, number, number] = [0.16, 1, 0.3, 1];
@@ -31,9 +35,11 @@ export default function CenterStage({
   member,
   activeSubTeam,
   onSelectProject,
+  onOpenPPTStudio,
 }: CenterStageProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [badgeErrors, setBadgeErrors] = useState<Record<string, boolean>>({});
+  const [isDownloading, setIsDownloading] = useState(false);
 
   // Reset scroll position to top whenever active member changes
   useEffect(() => {
@@ -60,10 +66,10 @@ export default function CenterStage({
         <AnimatePresence mode="wait">
           <motion.div
             key={member.id}
-            initial={{ opacity: 0, scale: 0.985, filter: "blur(4px)" }}
-            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-            exit={{ opacity: 0, scale: 0.985, filter: "blur(4px)" }}
-            transition={{ duration: 0.22, ease: smoothEase }}
+            initial={{ opacity: 0, scale: 0.99 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.99 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
             className="relative w-full h-full max-h-full bg-neutral-900/90 border border-neutral-800/80 backdrop-blur-2xl rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col group/card min-h-0"
           >
             {/* Animated gradient border shimmer */}
@@ -106,8 +112,30 @@ export default function CenterStage({
                 </div>
               </div>
 
-              {/* Social Connect Icons */}
+              {/* PPT Download & Social Connect Icons */}
               <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+                <button
+                  type="button"
+                  onClick={async () => {
+                    try {
+                      setIsDownloading(true);
+                      await downloadCandidatePPT(member);
+                    } finally {
+                      setIsDownloading(false);
+                    }
+                  }}
+                  disabled={isDownloading}
+                  title="Download PowerPoint Presentation (.pptx)"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-sky-500 via-sky-600 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold text-xs border border-sky-400/40 shadow-[0_0_16px_rgba(14,165,233,0.35)] hover:shadow-[0_0_22px_rgba(14,165,233,0.55)] transition-all hover:scale-105 active:scale-95 cursor-pointer disabled:opacity-50"
+                >
+                  {isDownloading ? (
+                    <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <FileDown className="w-3.5 h-3.5 text-sky-200" />
+                  )}
+                  <span>Download PPT</span>
+                </button>
+
                 {member.socialLinks?.github && (
                   <a
                     href={member.socialLinks.github}

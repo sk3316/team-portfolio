@@ -24,7 +24,7 @@ export default function MobileNavigation({
   onSelectMember,
 }: MobileNavigationProps) {
   return (
-    <div className="w-full flex flex-col gap-2.5 px-4 py-3 bg-neutral-950/90 border-b border-neutral-900/80 backdrop-blur-xl lg:hidden z-20 flex-shrink-0">
+    <div className="w-full flex flex-col gap-2.5 px-4 py-3 bg-neutral-950/90 border-b border-neutral-900/80 backdrop-blur-xl xl:hidden z-20 flex-shrink-0">
       {/* Sub-Team Horizontal Pill Rail */}
       <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5 -mx-1 px-1">
         {subTeams.map((team) => {

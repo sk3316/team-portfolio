@@ -1,11 +1,12 @@
 // components/LeftMemberDial.tsx
 "use client";
 
-import React, { useCallback, useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { TeamMember } from "@/data/portfolio-data";
 import Image from "next/image";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, FileDown } from "lucide-react";
+import { downloadCandidatePPT } from "@/lib/pptx/nativePptxGenerator";
 
 interface LeftMemberDialProps {
   members: TeamMember[];
@@ -18,6 +19,10 @@ export default function LeftMemberDial({
   selectedMemberId,
   onSelectMember,
 }: LeftMemberDialProps) {
+  const [hoveredMemberId, setHoveredMemberId] = useState<string | null>(null);
+  const [downloadingId, setDownloadingId] = useState<string | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const selectedIndex = Math.max(
     0,
     members.findIndex((m) => m.id === selectedMemberId),
@@ -32,9 +37,13 @@ export default function LeftMemberDial({
   const radius = 260; // Radius of circular arc
   const originX = -130; // Virtual center off-screen to the left
 
-  // Smooth, throttled scroll wheel navigation
-  const handleWheel = useCallback(
-    (e: React.WheelEvent) => {
+  // Non-passive wheel event listener that truly prevents page scrolling
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const onNativeWheel = (e: WheelEvent) => {
+      // Unconditionally stop page scroll towards footer
       e.preventDefault();
       e.stopPropagation();
 
@@ -43,12 +52,12 @@ export default function LeftMemberDial({
       const now = Date.now();
       wheelAccumulator.current += e.deltaY;
 
-      // Prevent runaway scrolling on trackpads/fast scroll wheels (120ms throttle)
-      if (now - lastScrollTime.current < 120) {
+      // Throttle rapid wheel turns (90ms)
+      if (now - lastScrollTime.current < 90) {
         return;
       }
 
-      if (Math.abs(wheelAccumulator.current) >= 30) {
+      if (Math.abs(wheelAccumulator.current) >= 20) {
         const direction = wheelAccumulator.current > 0 ? 1 : -1;
         wheelAccumulator.current = 0;
         lastScrollTime.current = now;
@@ -62,13 +71,17 @@ export default function LeftMemberDial({
           onSelectMember(members[nextIndex]);
         }
       }
-    },
-    [selectedIndex, members, onSelectMember, hasScrolled],
-  );
+    };
+
+    el.addEventListener("wheel", onNativeWheel, { passive: false });
+    return () => {
+      el.removeEventListener("wheel", onNativeWheel);
+    };
+  }, [selectedIndex, members, onSelectMember, hasScrolled]);
 
   return (
     <div
-      onWheel={handleWheel}
+      ref={containerRef}
       className="absolute left-0 top-0 bottom-0 w-64 select-none z-20 flex items-center justify-start pointer-events-auto"
       style={{ touchAction: "none" }}
     >
@@ -154,8 +167,10 @@ export default function LeftMemberDial({
                 mass: 0.8,
               }}
               onClick={() => onSelectMember(member)}
-              className="absolute left-0 top-1/2 -translate-y-1/2 cursor-pointer group flex items-center gap-2.5"
-              style={{ zIndex: isSelected ? 20 : 10 - distance }}
+              onMouseEnter={() => setHoveredMemberId(member.id)}
+              onMouseLeave={() => setHoveredMemberId(null)}
+              className="absolute left-0 top-1/2 -translate-y-1/2 cursor-pointer group flex items-center gap-2.5 will-change-transform"
+              style={{ zIndex: isSelected || hoveredMemberId === member.id ? 25 : 10 - distance }}
             >
               {/* Avatar Bubble */}
               <div
@@ -178,24 +193,49 @@ export default function LeftMemberDial({
                 />
               </div>
 
-              {/* Compact Name Tag for selected member */}
+              {/* Name Tag & Download PPT button on hover / selection */}
               <motion.div
                 animate={{
-                  opacity: isSelected ? 1 : 0,
-                  x: isSelected ? 0 : -6,
-                  scale: isSelected ? 1 : 0.95,
+                  opacity: isSelected || hoveredMemberId === member.id ? 1 : 0,
+                  x: isSelected || hoveredMemberId === member.id ? 0 : -6,
+                  scale: isSelected || hoveredMemberId === member.id ? 1 : 0.95,
                 }}
-                transition={{ duration: 0.2, ease: "easeOut" }}
-                className={`pointer-events-none whitespace-nowrap bg-neutral-900/90 border border-neutral-800 backdrop-blur-md px-2.5 py-1 rounded-xl shadow-lg max-w-[130px] ${
-                  isSelected ? "block" : "hidden"
+                transition={{ duration: 0.15, ease: "easeOut" }}
+                className={`whitespace-nowrap bg-neutral-900/95 border border-neutral-700/80 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-2xl flex flex-col gap-1.5 ${
+                  isSelected || hoveredMemberId === member.id ? "pointer-events-auto" : "pointer-events-none hidden"
                 }`}
               >
-                <p className="text-xs font-semibold text-white tracking-tight leading-tight truncate">
-                  {member.name}
-                </p>
-                <p className="text-[9.5px] font-medium text-indigo-400 leading-tight truncate">
-                  {member.role}
-                </p>
+                <div className="max-w-[140px]">
+                  <p className="text-xs font-semibold text-white tracking-tight leading-tight truncate">
+                    {member.name}
+                  </p>
+                  <p className="text-[9.5px] font-medium text-indigo-400 leading-tight truncate">
+                    {member.role}
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={async (e) => {
+                    e.stopPropagation();
+                    try {
+                      setDownloadingId(member.id);
+                      await downloadCandidatePPT(member);
+                    } finally {
+                      setDownloadingId(null);
+                    }
+                  }}
+                  disabled={downloadingId === member.id}
+                  title={`Download ${member.name}'s PowerPoint presentation`}
+                  className="inline-flex items-center justify-center gap-1.5 px-2 py-1 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-bold text-[10px] shadow-[0_0_12px_rgba(2,132,199,0.4)] border border-sky-400/40 transition-all hover:scale-105 active:scale-95 cursor-pointer disabled:opacity-50"
+                >
+                  {downloadingId === member.id ? (
+                    <div className="w-2.5 h-2.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <FileDown className="w-3 h-3 text-sky-200" />
+                  )}
+                  <span>Download PPT</span>
+                </button>
               </motion.div>
             </motion.div>
           );

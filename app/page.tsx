@@ -18,6 +18,7 @@ import Header, { NavTab } from "@/components/Header";
 import Footer from "@/components/Footer";
 import AboutUsSection from "@/components/AboutUsSection";
 import ContactSection from "@/components/ContactSection";
+import PPTStudioModal from "@/components/PPTStudioModal";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Page() {
@@ -29,6 +30,7 @@ export default function Page() {
     portfolioData.members[0].id,
   );
   const [activeProject, setActiveProject] = useState<Project | null>(null);
+  const [isPPTStudioOpen, setIsPPTStudioOpen] = useState(false);
 
   // Filter members based on chosen sub-team
   const filteredMembers = useMemo(() => {
@@ -109,24 +111,22 @@ export default function Page() {
   }, [handleKeyDown]);
 
   return (
-    <main className="relative min-h-screen w-full bg-neutral-950 text-white flex flex-col justify-between selection:bg-indigo-500/30 overflow-x-hidden">
-      {/* ── Ambient Background Glow ──────────────── */}
-      <div className="pointer-events-none fixed inset-0 -z-0 overflow-hidden">
-        <div
-          className="absolute left-1/2 top-1/4 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] rounded-full bg-indigo-600/10 blur-[130px]"
-          style={{ animation: "ambient-drift 18s ease-in-out infinite" }}
-        />
-        <div
-          className="absolute right-1/4 bottom-1/4 w-[450px] h-[450px] rounded-full bg-violet-600/8 blur-[110px]"
-          style={{ animation: "ambient-drift-alt 22s ease-in-out infinite" }}
-        />
-        <div
-          className="absolute left-1/4 bottom-1/3 w-[380px] h-[380px] rounded-full bg-cyan-500/5 blur-[95px]"
-          style={{
-            animation: "ambient-drift 25s ease-in-out infinite reverse",
-          }}
-        />
-      </div>
+    <main
+      className={`relative min-h-screen w-full bg-neutral-950 text-white flex flex-col justify-between selection:bg-indigo-500/30 overflow-x-hidden ${
+        activeTab === "members" ? "xl:h-screen xl:overflow-hidden" : ""
+      }`}
+    >
+      {/* ── High-Performance Ambient Glow (Zero CPU/GPU Lag) ── */}
+      <div
+        className="pointer-events-none fixed inset-0 -z-0 overflow-hidden opacity-60"
+        style={{
+          backgroundImage: `
+            radial-gradient(circle at 50% 20%, rgba(99, 102, 241, 0.12) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 45%),
+            radial-gradient(circle at 20% 60%, rgba(6, 182, 212, 0.06) 0%, transparent 40%)
+          `,
+        }}
+      />
 
       {/* ── Top Bar Header (3 Tabs: Home / Members / Contact) ── */}
       <Header
@@ -134,6 +134,7 @@ export default function Page() {
         onSelectTab={handleSelectTab}
         selectedSubTeamName={selectedSubTeam.name}
         memberCount={filteredMembers.length}
+        onOpenPPTStudio={() => setIsPPTStudioOpen(true)}
       />
 
       {/* ── Dynamic Tab Content ──────────────────────── */}
@@ -195,6 +196,7 @@ export default function Page() {
                     member={activeMember}
                     activeSubTeam={selectedSubTeam}
                     onSelectProject={(project) => setActiveProject(project)}
+                    onOpenPPTStudio={() => setIsPPTStudioOpen(true)}
                   />
                 </div>
 
@@ -226,11 +228,13 @@ export default function Page() {
         </AnimatePresence>
       </div>
 
-      {/* ── Global Footer With Essential Information ── */}
-      <Footer
-        onSelectTab={handleSelectTab}
-        onSelectSubTeam={handleSelectSubTeam}
-      />
+      {/* ── Global Footer (Rendered on Home & Contact; Members tab has fixed full-screen cockpit) ── */}
+      {activeTab !== "members" && (
+        <Footer
+          onSelectTab={handleSelectTab}
+          onSelectSubTeam={handleSelectSubTeam}
+        />
+      )}
 
       {/* ── Project Deep-Dive Modal (Available Globally) ── */}
       <ProjectModal
@@ -238,6 +242,14 @@ export default function Page() {
         isOpen={!!activeProject}
         onClose={() => setActiveProject(null)}
         authorName={activeMember?.name || "CXcel Engineer"}
+      />
+
+      {/* ── Global PPT Studio Modal (Dual-Engine PPT Generation & Duplication) ── */}
+      <PPTStudioModal
+        isOpen={isPPTStudioOpen}
+        onClose={() => setIsPPTStudioOpen(false)}
+        activeMember={activeMember}
+        onSelectMember={(memberId) => setSelectedMemberId(memberId)}
       />
     </main>
   );

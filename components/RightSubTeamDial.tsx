@@ -1,7 +1,7 @@
 // components/RightSubTeamDial.tsx
 "use client";
 
-import React, { useCallback, useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SubTeam, getMembersBySubTeam } from "@/data/portfolio-data";
 import { Users, ChevronDown } from "lucide-react";
@@ -17,6 +17,8 @@ export default function RightSubTeamDial({
   selectedSubTeamId,
   onSelectSubTeam,
 }: RightSubTeamDialProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const selectedIndex = Math.max(
     0,
     subTeams.findIndex((t) => t.id === selectedSubTeamId),
@@ -31,9 +33,13 @@ export default function RightSubTeamDial({
   const radius = 260; // Radius of circular arc
   const originXFromRight = -130; // Virtual origin off-screen to the right
 
-  // Smooth, throttled scroll wheel navigation
-  const handleWheel = useCallback(
-    (e: React.WheelEvent) => {
+  // Non-passive wheel event listener that truly prevents page scrolling
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const onNativeWheel = (e: WheelEvent) => {
+      // Unconditionally stop page scroll towards footer
       e.preventDefault();
       e.stopPropagation();
 
@@ -42,12 +48,12 @@ export default function RightSubTeamDial({
       const now = Date.now();
       wheelAccumulator.current += e.deltaY;
 
-      // Prevent runaway scrolling (120ms throttle)
-      if (now - lastScrollTime.current < 120) {
+      // Throttle rapid wheel turns (90ms)
+      if (now - lastScrollTime.current < 90) {
         return;
       }
 
-      if (Math.abs(wheelAccumulator.current) >= 30) {
+      if (Math.abs(wheelAccumulator.current) >= 20) {
         const direction = wheelAccumulator.current > 0 ? 1 : -1;
         wheelAccumulator.current = 0;
         lastScrollTime.current = now;
@@ -61,13 +67,17 @@ export default function RightSubTeamDial({
           onSelectSubTeam(subTeams[nextIndex]);
         }
       }
-    },
-    [selectedIndex, subTeams, onSelectSubTeam, hasScrolled],
-  );
+    };
+
+    el.addEventListener("wheel", onNativeWheel, { passive: false });
+    return () => {
+      el.removeEventListener("wheel", onNativeWheel);
+    };
+  }, [selectedIndex, subTeams, onSelectSubTeam, hasScrolled]);
 
   return (
     <div
-      onWheel={handleWheel}
+      ref={containerRef}
       className="absolute right-0 top-0 bottom-0 w-64 select-none z-20 flex items-center justify-end pointer-events-auto"
       style={{ touchAction: "none" }}
     >
