@@ -22,8 +22,8 @@ export async function downloadStarterTemplate(): Promise<void> {
     y: 0,
     w: 13.33,
     h: 0.1,
-    fill: { color: "6366F1" },
-    line: { color: "6366F1" },
+    fill: { color: "10B981" },
+    line: { color: "10B981" },
   });
 
   // Header
@@ -33,8 +33,8 @@ export async function downloadStarterTemplate(): Promise<void> {
     w: 2.2,
     h: 0.3,
     rectRadius: 0.08,
-    fill: { color: "1E1B4B" },
-    line: { color: "6366F1", width: 1 },
+    fill: { color: "064E3B" },
+    line: { color: "10B981", width: 1 },
   });
   slide.addText("{{subteam}}", {
     x: 0.8,
@@ -44,7 +44,7 @@ export async function downloadStarterTemplate(): Promise<void> {
     fontSize: 10,
     fontFace: "Segoe UI",
     bold: true,
-    color: "818CF8",
+    color: "34D399",
     align: "center",
     valign: "middle",
   });
@@ -68,7 +68,7 @@ export async function downloadStarterTemplate(): Promise<void> {
     fontSize: 14,
     fontFace: "Segoe UI",
     bold: true,
-    color: "818CF8",
+    color: "34D399",
   });
 
   slide.addText("Email: {{email}}   |   Phone: {{phone}}", {
@@ -101,7 +101,7 @@ export async function downloadStarterTemplate(): Promise<void> {
     fontSize: 10,
     fontFace: "Segoe UI",
     bold: true,
-    color: "818CF8",
+    color: "34D399",
   });
   slide.addText("{{bio}}", {
     x: 1.05,
@@ -132,7 +132,7 @@ export async function downloadStarterTemplate(): Promise<void> {
     fontSize: 10,
     fontFace: "Segoe UI",
     bold: true,
-    color: "818CF8",
+    color: "34D399",
   });
   slide.addText("{{skills_bullets}}", {
     x: 1.05,
@@ -163,7 +163,7 @@ export async function downloadStarterTemplate(): Promise<void> {
     fontSize: 10,
     fontFace: "Segoe UI",
     bold: true,
-    color: "818CF8",
+    color: "34D399",
   });
   slide.addText("{{certifications}}", {
     x: 1.05,
@@ -204,7 +204,7 @@ export async function downloadStarterTemplate(): Promise<void> {
     h: 0.25,
     fontSize: 9.5,
     fontFace: "Segoe UI",
-    color: "818CF8",
+    color: "34D399",
   });
   slide.addText("{{project_1_desc}}", {
     x: 5.55,
@@ -224,7 +224,7 @@ export async function downloadStarterTemplate(): Promise<void> {
     fontSize: 9,
     fontFace: "Segoe UI",
     bold: true,
-    color: "818CF8",
+    color: "34D399",
   });
 
   // Project 2
@@ -254,7 +254,7 @@ export async function downloadStarterTemplate(): Promise<void> {
     h: 0.25,
     fontSize: 9.5,
     fontFace: "Segoe UI",
-    color: "818CF8",
+    color: "34D399",
   });
   slide.addText("{{project_2_desc}}", {
     x: 5.55,
@@ -274,7 +274,7 @@ export async function downloadStarterTemplate(): Promise<void> {
     fontSize: 9,
     fontFace: "Segoe UI",
     bold: true,
-    color: "818CF8",
+    color: "34D399",
   });
 
   await pres.writeFile({ fileName: "Sample_Candidate_Profile_Template.pptx" });

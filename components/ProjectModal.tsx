@@ -52,7 +52,7 @@ export default function ProjectModal({
             {/* Top Bar */}
             <div className="px-6 py-4 border-b border-neutral-800 flex items-center justify-between bg-neutral-950/70">
               <div className="flex items-center gap-2.5">
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] uppercase font-bold tracking-wider bg-indigo-950 text-indigo-400 border border-indigo-800/60">
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] uppercase font-bold tracking-wider bg-emerald-950 text-emerald-400 border border-emerald-800/60">
                   {project.category || 'Engineering Case Study'}
                 </span>
                 <span className="text-xs text-neutral-500">• Lead: {authorName}</span>
@@ -83,7 +83,7 @@ export default function ProjectModal({
               {project.metrics && project.metrics.length > 0 && (
                 <div>
                   <h3 className="text-xs uppercase tracking-wider font-bold text-neutral-400 mb-3 flex items-center gap-1.5">
-                    <TrendingUp className="w-3.5 h-3.5 text-indigo-400" />
+                    <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
                     Key Impact & Performance
                   </h3>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -92,7 +92,7 @@ export default function ProjectModal({
                         key={metric.label}
                         className="p-3.5 rounded-2xl bg-neutral-950/60 border border-neutral-800/90 flex flex-col"
                       >
-                        <span className="text-xl sm:text-2xl font-extrabold text-indigo-400 tracking-tight">
+                        <span className="text-xl sm:text-2xl font-extrabold text-emerald-400 tracking-tight">
                           {metric.value}
                         </span>
                         <span className="text-[11px] text-neutral-400 mt-1 font-medium">
@@ -117,7 +117,7 @@ export default function ProjectModal({
                         key={idx}
                         className="p-3 rounded-xl bg-neutral-800/40 border border-neutral-800/80 text-xs text-neutral-200 flex items-start gap-2.5"
                       >
-                        <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 mt-1.5 flex-shrink-0" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5 flex-shrink-0" />
                         <span className="leading-relaxed">{highlight}</span>
                       </div>
                     ))}
@@ -128,14 +128,14 @@ export default function ProjectModal({
               {/* Tech Stack Matrix */}
               <div>
                 <h3 className="text-xs uppercase tracking-wider font-bold text-neutral-400 mb-3 flex items-center gap-1.5">
-                  <Layers className="w-3.5 h-3.5 text-indigo-400" />
+                  <Layers className="w-3.5 h-3.5 text-emerald-400" />
                   Technologies & Dependencies
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {project.technologies.map((tech) => (
                     <span
                       key={tech}
-                      className="px-3 py-1 bg-neutral-800/70 border border-neutral-700/70 rounded-lg text-xs font-mono font-medium text-indigo-300"
+                      className="px-3 py-1 bg-neutral-800/70 border border-neutral-700/70 rounded-lg text-xs font-mono font-medium text-emerald-300"
                     >
                       {tech}
                     </span>
@@ -176,7 +176,7 @@ export default function ProjectModal({
                   href={project.liveUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold tracking-wide flex items-center gap-2 shadow-[0_0_20px_rgba(99,102,241,0.5)] transition-all ml-auto"
+                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-semibold tracking-wide flex items-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.4)] transition-all ml-auto"
                 >
                   <span>View Live Deployment</span>
                   <ExternalLink className="w-3.5 h-3.5" />

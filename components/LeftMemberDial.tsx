@@ -98,14 +98,14 @@ export default function LeftMemberDial({
           stroke="currentColor"
           strokeWidth="1.5"
           strokeDasharray="5 7"
-          className="text-indigo-400"
+          className="text-emerald-400"
         />
       </svg>
 
       {/* Focal Apex Indicator (Aligned with selected node at 0 degrees) */}
       <div className="absolute left-[130px] top-1/2 -translate-y-1/2 flex items-center gap-1.5 pointer-events-none z-30">
-        <div className="w-2.5 h-2.5 rounded-full bg-indigo-400 shadow-[0_0_14px_rgba(129,140,248,1)] animate-pulse" />
-        <div className="w-6 h-[1.5px] bg-gradient-to-r from-indigo-500/80 to-transparent" />
+        <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_14px_rgba(52,211,153,1)] animate-pulse" />
+        <div className="w-6 h-[1.5px] bg-gradient-to-r from-emerald-500/80 to-transparent" />
       </div>
 
       {/* Scroll Hint */}
@@ -121,7 +121,7 @@ export default function LeftMemberDial({
               Scroll to browse
             </span>
             <ChevronDown
-              className="w-3.5 h-3.5 text-indigo-400"
+              className="w-3.5 h-3.5 text-emerald-400"
               style={{
                 animation: "scroll-hint-bounce 1.5s ease-in-out infinite",
               }}
@@ -176,8 +176,8 @@ export default function LeftMemberDial({
               <div
                 className={`relative w-12 h-12 rounded-full p-0.5 transition-all duration-300 ${
                   isSelected
-                    ? "ring-3 ring-indigo-500/60 shadow-[0_0_24px_rgba(99,102,241,0.7)] border-2 border-indigo-400 scale-105"
-                    : "border border-neutral-700/80 bg-neutral-900 group-hover:border-indigo-400/60 group-hover:scale-105 group-hover:shadow-[0_0_12px_rgba(99,102,241,0.25)]"
+                    ? "ring-3 ring-emerald-500/60 shadow-[0_0_24px_rgba(16,185,129,0.7)] border-2 border-emerald-400 scale-105"
+                    : "border border-neutral-700/80 bg-neutral-900 group-hover:border-emerald-400/60 group-hover:scale-105 group-hover:shadow-[0_0_12px_rgba(16,185,129,0.25)]"
                 }`}
               >
                 <Image
@@ -209,7 +209,7 @@ export default function LeftMemberDial({
                   <p className="text-xs font-semibold text-white tracking-tight leading-tight truncate">
                     {member.name}
                   </p>
-                  <p className="text-[9.5px] font-medium text-indigo-400 leading-tight truncate">
+                  <p className="text-[9.5px] font-medium text-emerald-400 leading-tight truncate">
                     {member.role}
                   </p>
                 </div>

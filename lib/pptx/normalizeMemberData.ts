@@ -1,6 +1,7 @@
 // lib/pptx/normalizeMemberData.ts
-import { TeamMember, SubTeam } from "@/data/portfolio-data";
+import { SubTeam } from "@/data/portfolio-data";
 import { NormalizedMember, NormalizedProject, TokenReplacementMap } from "./types";
+import { resolveBadge, BADGE_DEFINITIONS } from "./badgeLogos";
 
 /**
  * Leniently normalizes any member object, safely handling:
@@ -30,11 +31,11 @@ export function normalizeMemberData(
   }
 
   // Safe Contact Details
-  const email = (typeof member.email === "string" && member.email.trim()) || "contact@cxcel.com";
+  const email = (typeof member.email === "string" && member.email.trim()) || "contact@cxstudio.io";
   const phone = (typeof member.phone === "string" && member.phone.trim()) || "";
 
   // Safe Bio
-  let bio = (typeof member.bio === "string" && member.bio.trim()) || 
+  const bio = (typeof member.bio === "string" && member.bio.trim()) || 
     "Experienced enterprise professional with proven delivery track record in architecture, integration, and solution engineering.";
 
   // Safe Skills (can be array of strings or comma-separated string)
@@ -80,13 +81,57 @@ export function normalizeMemberData(
   }
 
   // Safe Badges
-  let badges: { name: string; fallbackText?: string; color?: string }[] = [];
-  if (Array.isArray(member.badges)) {
-    badges = member.badges.map((b: any) => ({
-      name: typeof b?.name === "string" ? b.name : "Badge",
-      fallbackText: typeof b?.fallbackText === "string" ? b.fallbackText : undefined,
-      color: typeof b?.color === "string" ? b.color : "#6366F1",
-    }));
+  let badges: {
+    name: string;
+    fallbackText?: string;
+    color?: string;
+    logoUrl?: string;
+    base64?: string;
+  }[] = [];
+
+  if (Array.isArray(member.badges) && member.badges.length > 0) {
+    badges = member.badges.map((b: any) => {
+      const bName = typeof b?.name === "string" ? b.name : "Badge";
+      const resolved = resolveBadge(bName);
+      return {
+        name: resolved?.name || bName,
+        logoUrl: b?.logoUrl || resolved?.localPath || "",
+        fallbackText:
+          b?.fallbackText ||
+          resolved?.fallbackText ||
+          bName.slice(0, 4).toUpperCase(),
+        color: b?.color || resolved?.color || "#0090D6",
+        base64: b?.base64 || resolved?.base64 || undefined,
+      };
+    });
+  } else {
+    // If no badges array, infer from certifications & skills
+    const resolvedSet = new Map<string, any>();
+    const sapBadge = BADGE_DEFINITIONS["sap"];
+    if (sapBadge) {
+      resolvedSet.set(sapBadge.id, {
+        name: sapBadge.name,
+        logoUrl: sapBadge.localPath,
+        fallbackText: sapBadge.fallbackText,
+        color: sapBadge.color,
+        base64: sapBadge.base64,
+      });
+    }
+
+    const searchPool = [...certifications, ...skills];
+    for (const item of searchPool) {
+      const def = resolveBadge(item);
+      if (def && !resolvedSet.has(def.id)) {
+        resolvedSet.set(def.id, {
+          name: def.name,
+          logoUrl: def.localPath,
+          fallbackText: def.fallbackText,
+          color: def.color,
+          base64: def.base64,
+        });
+      }
+    }
+    badges = Array.from(resolvedSet.values());
   }
 
   // Safe Featured Projects

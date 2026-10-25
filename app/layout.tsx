@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Nexus Core Lab — Team Portfolio",
+  title: "CX Studio — SAP Customer Experience & Engineering Portfolio",
   description:
-    "Autonomous systems, high-performance UI engines, and cloud distributed clusters. Meet the engineers behind Nexus Core Lab.",
+    "Enterprise SAP Customer Experience delivery practice — CRM, Commerce Cloud, Marketing Cloud, BTP, and CPI integrations. Meet the specialists behind CX Studio.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

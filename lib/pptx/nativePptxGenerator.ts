@@ -24,8 +24,8 @@ export async function downloadCandidatePPT(
 
   // Explicitly use LAYOUT_WIDE (13.333 x 7.5 inches) so 16:9 widescreen bounds are fully honored
   pres.layout = "LAYOUT_WIDE";
-  pres.author = "CXcel Studio";
-  pres.company = "CXcel Studio";
+  pres.author = "CX Studio";
+  pres.company = "CX Studio";
   pres.title = `${member.name} — Profile`;
 
   const slide = pres.addSlide();
@@ -47,11 +47,98 @@ export async function downloadCandidatePPT(
     {
       x: 0.5,
       y: 0.28,
-      w: 12.33,
+      w: 6.5,
       h: 0.55,
       valign: "middle",
     }
   );
+
+  // ── Top Right Badges (in whitespace right of name & above Professional Experience) ────
+  // Badges start appearing from the right-hand side (x = 12.8 moving leftwards)
+  const displayBadges = (member.badges || []).slice(0, 4);
+  const rightEdge = 12.8;
+  const badgeW = 0.82;
+  const badgeH = 0.52;
+  const gap = 0.12;
+  const badgeY = 0.30;
+
+  displayBadges.forEach((badge, idx) => {
+    // Docked from right-hand edge moving leftwards
+    const badgeX = rightEdge - badgeW - idx * (badgeW + gap);
+
+    // Subtle white executive badge card
+    slide.addShape(pres.ShapeType.roundRect, {
+      x: badgeX,
+      y: badgeY,
+      w: badgeW,
+      h: badgeH,
+      fill: { color: "FFFFFF" },
+      line: { color: "D0D7DE", width: 1 },
+      rectRadius: 0.08,
+    });
+
+    // Badge Logo or Monogram Fallback
+    const logoData =
+      badge.base64 ||
+      (badge.logoUrl?.startsWith("data:") ? badge.logoUrl : null);
+    const logoPath = !logoData && badge.logoUrl ? badge.logoUrl : null;
+
+    let imageRendered = false;
+
+    if (logoData) {
+      try {
+        slide.addImage({
+          data: logoData,
+          x: badgeX + 0.10,
+          y: badgeY + 0.06,
+          w: badgeW - 0.20,
+          h: badgeH - 0.12,
+          sizing: {
+            type: "contain",
+            w: badgeW - 0.20,
+            h: badgeH - 0.12,
+          },
+        });
+        imageRendered = true;
+      } catch {
+        imageRendered = false;
+      }
+    } else if (logoPath) {
+      try {
+        slide.addImage({
+          path: logoPath,
+          x: badgeX + 0.10,
+          y: badgeY + 0.06,
+          w: badgeW - 0.20,
+          h: badgeH - 0.12,
+          sizing: {
+            type: "contain",
+            w: badgeW - 0.20,
+            h: badgeH - 0.12,
+          },
+        });
+        imageRendered = true;
+      } catch {
+        imageRendered = false;
+      }
+    }
+
+    if (!imageRendered) {
+      const monogram = badge.fallbackText || badge.name.slice(0, 4).toUpperCase();
+      slide.addText(monogram, {
+        x: badgeX,
+        y: badgeY,
+        w: badgeW,
+        h: badgeH,
+        fontSize: 10,
+        fontFace,
+        bold: true,
+        color: badge.color ? badge.color.replace("#", "") : "0090D6",
+        align: "center",
+        valign: "middle",
+      });
+    }
+  });
 
   // ── Left Column (x = 0.5, w = 3.2) ──────────────────────────
   const leftX = 0.5;
@@ -348,10 +435,10 @@ export async function downloadCandidatePPT(
     valign: "middle",
   });
 
-  // Prepare Key Engagements / Featured Projects
+  // Prepare Key Engagements / Featured Projects (supports 1, 2, 3, or up to 4 projects dynamically)
   const projects =
     member.featuredProjects.length > 0
-      ? member.featuredProjects.slice(0, 2)
+      ? member.featuredProjects.slice(0, 4)
       : [
           {
             title: `Worked as ${member.role} with Global Enterprise Client`,
@@ -373,58 +460,39 @@ export async function downloadCandidatePPT(
           },
         ];
 
-  // Render Project 1
-  const p1 = projects[0];
-  const p1Lead = p1.title.startsWith("Worked as")
-    ? p1.title
-    : `Worked as ${member.role} on ${p1.title} (${p1.category || "Enterprise Project"})`;
+  // Render projects dynamically with auto-scaling height and typography
+  const numProjects = projects.length;
+  const totalAvailableHeight = 3.95;
+  const projectSlotHeight = totalAvailableHeight / numProjects;
+  const projectFontSize = numProjects >= 4 ? 7.6 : numProjects === 3 ? 8.2 : 8.8;
+  const lineSpacing = numProjects >= 4 ? 11 : numProjects === 3 ? 12 : 13.5;
 
-  slide.addText(
-    [
-      {
-        text: `•  ${p1Lead}, `,
-        options: { bold: true, fontSize: 8.8, fontFace, color: textColor },
-      },
-      {
-        text: `${p1.description} Authored Technical Specification Documents, supported UAT, Go-Live, and post-production activities. Performed system monitoring, performance tuning, and proactive issue resolution to maintain stable operations.`,
-        options: { bold: false, fontSize: 8.8, fontFace, color: textColor },
-      },
-    ],
-    {
-      x: rightX + 0.2,
-      y: engBannerY + bannerH + 0.08,
-      w: rightW - 0.4,
-      h: 1.85,
-      valign: "top",
-      lineSpacing: 13.5,
-    }
-  );
+  for (let i = 0; i < numProjects; i++) {
+    const p = projects[i];
+    const pLead = p.title.startsWith("Worked as")
+      ? p.title
+      : `Worked as ${member.role} on ${p.title} (${p.category || "Enterprise Delivery"})`;
 
-  // Render Project 2
-  if (projects.length > 1) {
-    const p2 = projects[1];
-    const p2Lead = p2.title.startsWith("Worked as")
-      ? p2.title
-      : `Worked as ${member.role} on ${p2.title} (${p2.category || "Delivery"})`;
+    const projectY = engBannerY + bannerH + 0.08 + i * projectSlotHeight;
 
     slide.addText(
       [
         {
-          text: `•  ${p2Lead}, `,
-          options: { bold: true, fontSize: 8.8, fontFace, color: textColor },
+          text: `•  ${pLead}, `,
+          options: { bold: true, fontSize: projectFontSize, fontFace, color: textColor },
         },
         {
-          text: `${p2.description} Managed certificates, keystores, and secure connectivity configurations, while collaborating with functional and onsite teams to validate requirements and mapping logic. Reviewed mapping documents, supported UAT, Go-Live, and post-production support.`,
-          options: { bold: false, fontSize: 8.8, fontFace, color: textColor },
+          text: `${p.description} Authored Technical Specification Documents, supported UAT, Go-Live, and post-production activities. Performed system monitoring, performance tuning, and proactive issue resolution to maintain stable operations.`,
+          options: { bold: false, fontSize: projectFontSize, fontFace, color: textColor },
         },
       ],
       {
         x: rightX + 0.2,
-        y: engBannerY + bannerH + 1.98,
+        y: projectY,
         w: rightW - 0.4,
-        h: 1.9,
+        h: projectSlotHeight - 0.06,
         valign: "top",
-        lineSpacing: 13.5,
+        lineSpacing,
       }
     );
   }

@@ -35,11 +35,11 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(99, 102, 241, 0.25);
+  background: rgba(16, 185, 129, 0.25);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(99, 102, 241, 0.45);
+  background: rgba(16, 185, 129, 0.45);
 }
 
 /* ── Ambient Background Glow ─────────────────────── */
@@ -94,7 +94,7 @@ body {
 
 /* ── Smooth Focus Ring ───────────────────────────── */
 *:focus-visible {
-  outline: 2px solid rgba(99, 102, 241, 0.6);
+  outline: 2px solid rgba(16, 185, 129, 0.6);
   outline-offset: 2px;
   border-radius: 8px;
 }
@@ -111,7 +111,7 @@ body {
 /* ── Custom Card Scrollbar ───────────────────────── */
 .custom-card-scroll {
   scrollbar-width: thin;
-  scrollbar-color: rgba(99, 102, 241, 0.4) transparent;
+  scrollbar-color: rgba(16, 185, 129, 0.4) transparent;
   scroll-behavior: smooth;
 }
 
@@ -125,12 +125,12 @@ body {
 }
 
 .custom-card-scroll::-webkit-scrollbar-thumb {
-  background: rgba(99, 102, 241, 0.35);
+  background: rgba(16, 185, 129, 0.35);
   border-radius: 9999px;
 }
 
 .custom-card-scroll::-webkit-scrollbar-thumb:hover {
-  background: rgba(99, 102, 241, 0.65);
+  background: rgba(16, 185, 129, 0.65);
 }
 
 

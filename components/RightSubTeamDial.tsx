@@ -3,7 +3,8 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { SubTeam, getMembersBySubTeam } from "@/data/portfolio-data";
+import { SubTeam } from "@/data/portfolio-data";
+import { usePortfolio } from "@/components/PortfolioContext";
 import { Users, ChevronDown } from "lucide-react";
 
 interface RightSubTeamDialProps {
@@ -17,6 +18,7 @@ export default function RightSubTeamDial({
   selectedSubTeamId,
   onSelectSubTeam,
 }: RightSubTeamDialProps) {
+  const { getMembersBySubTeam } = usePortfolio();
   const containerRef = useRef<HTMLDivElement>(null);
 
   const selectedIndex = Math.max(
@@ -94,14 +96,14 @@ export default function RightSubTeamDial({
           stroke="currentColor"
           strokeWidth="1.5"
           strokeDasharray="5 7"
-          className="text-indigo-400"
+          className="text-emerald-400"
         />
       </svg>
 
       {/* Focal Apex Indicator (Aligned with selected pill at 0 degrees) */}
       <div className="absolute right-[130px] top-1/2 -translate-y-1/2 flex items-center gap-1.5 pointer-events-none z-30 flex-row-reverse">
-        <div className="w-2.5 h-2.5 rounded-full bg-indigo-400 shadow-[0_0_14px_rgba(129,140,248,1)] animate-pulse" />
-        <div className="w-6 h-[1.5px] bg-gradient-to-l from-indigo-500/80 to-transparent" />
+        <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_14px_rgba(52,211,153,1)] animate-pulse" />
+        <div className="w-6 h-[1.5px] bg-gradient-to-l from-emerald-500/80 to-transparent" />
       </div>
 
       {/* Scroll Hint */}
@@ -117,7 +119,7 @@ export default function RightSubTeamDial({
               Scroll to filter
             </span>
             <ChevronDown
-              className="w-3.5 h-3.5 text-indigo-400"
+              className="w-3.5 h-3.5 text-emerald-400"
               style={{ animation: "scroll-hint-bounce 1.5s ease-in-out infinite" }}
             />
           </motion.div>
@@ -171,15 +173,15 @@ export default function RightSubTeamDial({
               <div
                 className={`px-3 py-1.5 rounded-2xl flex items-center gap-1.5 transition-all duration-300 ${
                   isSelected
-                    ? "bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-[0_0_24px_rgba(99,102,241,0.55)] border border-indigo-400 font-semibold scale-105"
-                    : "bg-neutral-900/90 text-neutral-400 border border-neutral-800 hover:border-indigo-400/50 hover:text-white hover:shadow-[0_0_12px_rgba(99,102,241,0.15)] backdrop-blur-md"
+                    ? "bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-[0_0_24px_rgba(16,185,129,0.55)] border border-emerald-400 font-semibold scale-105"
+                    : "bg-neutral-900/90 text-neutral-400 border border-neutral-800 hover:border-emerald-400/50 hover:text-white hover:shadow-[0_0_12px_rgba(16,185,129,0.15)] backdrop-blur-md"
                 }`}
               >
                 <Users
                   className={`w-3 h-3 ${
                     isSelected
                       ? "text-white"
-                      : "text-neutral-500 group-hover:text-indigo-400 transition-colors duration-200"
+                      : "text-neutral-500 group-hover:text-emerald-400 transition-colors duration-200"
                   }`}
                 />
                 <span className="text-xs tracking-wide whitespace-nowrap font-medium max-w-[130px] truncate">
@@ -191,7 +193,7 @@ export default function RightSubTeamDial({
                   className={`ml-0.5 text-[9.5px] font-bold px-1.5 py-0.5 rounded-md transition-all duration-200 ${
                     isSelected
                       ? "bg-white/20 text-white"
-                      : "bg-neutral-800 text-neutral-500 group-hover:bg-indigo-950/60 group-hover:text-indigo-400"
+                      : "bg-neutral-800 text-neutral-500 group-hover:bg-emerald-950/60 group-hover:text-emerald-400"
                   }`}
                 >
                   {memberCount}
@@ -201,7 +203,7 @@ export default function RightSubTeamDial({
               {/* Shortcode Badge */}
               <div
                 className={`pointer-events-none whitespace-nowrap bg-neutral-900/80 border border-neutral-800 px-1.5 py-0.5 rounded-md text-[9px] font-mono font-bold transition-opacity duration-200 ${
-                  isSelected ? "text-indigo-400 opacity-100" : "text-neutral-500 opacity-0 group-hover:opacity-60"
+                  isSelected ? "text-emerald-400 opacity-100" : "text-neutral-500 opacity-0 group-hover:opacity-60"
                 }`}
               >
                 {team.shortCode}

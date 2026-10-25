@@ -3,25 +3,19 @@
 import React from "react";
 import { motion } from "framer-motion";
 import {
-  Sparkles,
   Users,
-  ShieldCheck,
-  Zap,
-  Layers,
   ArrowRight,
-  Server,
   Workflow,
   ShoppingBag,
   Database,
   CheckCircle2,
   Cpu,
-  LineChart,
-  GitMerge,
-  Headphones,
   Award,
 } from "lucide-react";
-import { portfolioData, SubTeam } from "@/data/portfolio-data";
+import { SubTeam } from "@/data/portfolio-data";
+import { usePortfolio } from "@/components/PortfolioContext";
 import { NavTab } from "./Header";
+import HeroGridAnimation from "./HeroGridAnimation";
 
 interface AboutUsSectionProps {
   onSelectTab: (tab: NavTab) => void;
@@ -32,9 +26,17 @@ export default function AboutUsSection({
   onSelectTab,
   onSelectSubTeam,
 }: AboutUsSectionProps) {
+  const { data, subTeams, members } = usePortfolio();
+
+  const disciplineCount = subTeams.filter((st) => st.id !== "all").length;
+
   const stats = [
-    { value: "11", label: "Specialized Disciplines", hint: "Full SAP CX coverage" },
-    { value: "100%", label: "Certified Architects", hint: "SAP S/4HANA & BTP" },
+    {
+      value: String(disciplineCount > 0 ? disciplineCount : 11),
+      label: "Specialized Disciplines",
+      hint: "Full SAP CX coverage",
+    },
+    { value: `${members.length > 0 ? members.length : 13}+`, label: "Active Consultants", hint: "Single source Google Sheet roster" },
     { value: "45+", label: "Enterprise Go-Lives", hint: "Global Fortune 500 rollouts" },
     { value: "99.9%", label: "Integration Uptime", hint: "Zero-loss CPI pipeline SLA" },
   ];
@@ -44,31 +46,31 @@ export default function AboutUsSection({
       icon: Cpu,
       title: "Clean Core & BTP Extensibility",
       desc: "Architecting side-by-side cloud applications using SAP BTP, CAP, and RAP to keep the S/4HANA core pristine, upgrade-ready, and hyper-scalable.",
-      color: "from-blue-500/20 to-indigo-500/10",
-      border: "border-blue-500/30",
-      iconColor: "text-blue-400",
+      color: "from-emerald-500/20 to-teal-500/10",
+      border: "border-emerald-500/30",
+      iconColor: "text-emerald-400",
     },
     {
       icon: Workflow,
       title: "Resilient CPI & B2B Integration",
       desc: "Industrial-grade SAP Integration Suite (CPI) iFlows, B2B EDI mappings, Ariba network connectivity, and asynchronous event-driven queues.",
-      color: "from-indigo-500/20 to-violet-500/10",
-      border: "border-indigo-500/30",
-      iconColor: "text-indigo-400",
+      color: "from-teal-500/20 to-emerald-500/10",
+      border: "border-teal-500/30",
+      iconColor: "text-teal-400",
     },
     {
       icon: ShoppingBag,
       title: "Headless Composable Commerce",
       desc: "Sub-second SAP Commerce Cloud (Hybris) architectures, custom OCC REST APIs, Spartacus Angular storefronts, and complex B2B pricing matrices.",
-      color: "from-violet-500/20 to-purple-500/10",
-      border: "border-violet-500/30",
-      iconColor: "text-violet-400",
+      color: "from-emerald-500/20 to-cyan-500/10",
+      border: "border-emerald-500/30",
+      iconColor: "text-emerald-400",
     },
     {
       icon: Database,
       title: "Omnichannel Service & Marketing",
       desc: "Unified customer data platforms (CDP), real-time Emarsys customer journeys, and automated S/4HANA Service & CRM ticket resolution engines.",
-      color: "from-cyan-500/20 to-blue-500/10",
+      color: "from-cyan-500/20 to-teal-500/10",
       border: "border-cyan-500/30",
       iconColor: "text-cyan-400",
     },
@@ -106,64 +108,67 @@ export default function AboutUsSection({
   return (
     <div className="w-full flex flex-col space-y-16 sm:space-y-24 py-8 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto select-none">
       {/* ── Hero Section ───────────────────────────── */}
-      <section className="relative text-center space-y-6 pt-4 sm:pt-8">
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/25 text-indigo-300 text-xs font-medium backdrop-blur-sm"
-        >
-          <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-          <span>Enterprise SAP Customer Experience Studio</span>
-          <span className="w-1 h-1 rounded-full bg-indigo-400" />
-          <span className="text-neutral-400 font-normal">Est. 2026</span>
-        </motion.div>
+      <section className="relative pt-4 sm:pt-6 lg:pt-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 xl:gap-14 items-center">
+          {/* Left Column: Hero Typography & CTA Actions */}
+          <div className="lg:col-span-7 space-y-6 text-left">
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="text-3xl sm:text-5xl lg:text-[3.25rem] xl:text-[3.65rem] font-black tracking-tight text-white leading-[1.12]"
+            >
+              Architecting High-Performance{" "}
+              <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-300 bg-clip-text text-transparent">
+                SAP Digital CX
+              </span>{" "}
+              Ecosystems
+            </motion.h1>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white max-w-4xl mx-auto leading-tight"
-        >
-          Architecting High-Performance{" "}
-          <span className="bg-gradient-to-r from-indigo-400 via-violet-300 to-cyan-300 bg-clip-text text-transparent">
-            SAP Digital CX
-          </span>{" "}
-          Ecosystems
-        </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-sm sm:text-base lg:text-lg text-neutral-300 leading-relaxed max-w-2xl"
+            >
+              {data.teamInfo.tagline}
+            </motion.p>
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-sm sm:text-base lg:text-lg text-neutral-300 max-w-3xl mx-auto leading-relaxed"
-        >
-          {portfolioData.teamInfo.tagline}
-        </motion.p>
+            {/* Action Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="flex flex-wrap items-center justify-start gap-3 sm:gap-4 pt-2"
+            >
+              <button
+                onClick={() => onSelectTab("members")}
+                className="px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold text-sm shadow-[0_0_25px_rgba(16,185,129,0.4)] hover:shadow-[0_0_35px_rgba(16,185,129,0.6)] transition-all duration-300 flex items-center gap-2 group cursor-pointer"
+              >
+                <Users className="w-4 h-4 text-emerald-200 group-hover:scale-110 transition-transform" />
+                <span>Explore Core Team Portfolio</span>
+                <ArrowRight className="w-4 h-4 text-emerald-200 group-hover:translate-x-1 transition-transform" />
+              </button>
 
-        {/* Action Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 pt-2"
-        >
-          <button
-            onClick={() => onSelectTab("members")}
-            className="px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold text-sm shadow-[0_0_25px_rgba(99,102,241,0.4)] hover:shadow-[0_0_35px_rgba(99,102,241,0.6)] transition-all duration-300 flex items-center gap-2 group cursor-pointer"
+              <button
+                onClick={() => onSelectTab("contact")}
+                className="px-6 py-3 rounded-xl bg-neutral-900/90 hover:bg-neutral-800 border border-neutral-800 hover:border-neutral-700 text-neutral-200 hover:text-white font-medium text-sm transition-all duration-200 flex items-center gap-2 cursor-pointer"
+              >
+                <span>Consult Our Practice Leads</span>
+              </button>
+            </motion.div>
+          </div>
+
+          {/* Right Column: Animated Green Cyber Grid Visualizer */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, delay: 0.25 }}
+            className="lg:col-span-5 flex items-center justify-center lg:justify-end w-full"
           >
-            <Users className="w-4 h-4 text-indigo-200 group-hover:scale-110 transition-transform" />
-            <span>Explore Core Team Portfolio</span>
-            <ArrowRight className="w-4 h-4 text-indigo-200 group-hover:translate-x-1 transition-transform" />
-          </button>
-
-          <button
-            onClick={() => onSelectTab("contact")}
-            className="px-6 py-3 rounded-xl bg-neutral-900/90 hover:bg-neutral-800 border border-neutral-800 hover:border-neutral-700 text-neutral-200 hover:text-white font-medium text-sm transition-all duration-200 flex items-center gap-2 cursor-pointer"
-          >
-            <span>Consult Our Practice Leads</span>
-          </button>
-        </motion.div>
+            <HeroGridAnimation />
+          </motion.div>
+        </div>
       </section>
 
       {/* ── Key Metrics & Stats ─────────────────────── */}
@@ -174,9 +179,9 @@ export default function AboutUsSection({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 + idx * 0.1 }}
-            className="p-4 sm:p-6 rounded-2xl bg-neutral-900/50 border border-neutral-800/80 backdrop-blur-sm text-center relative overflow-hidden group hover:border-indigo-500/40 transition-all duration-300"
+            className="p-4 sm:p-6 rounded-2xl bg-neutral-900/50 border border-neutral-800/80 backdrop-blur-sm text-center relative overflow-hidden group hover:border-emerald-500/40 transition-all duration-300"
           >
-            <div className="text-2xl sm:text-4xl font-black text-white group-hover:text-indigo-300 transition-colors">
+            <div className="text-2xl sm:text-4xl font-black text-white group-hover:text-emerald-300 transition-colors">
               {stat.value}
             </div>
             <div className="text-xs sm:text-sm font-semibold text-neutral-200 mt-1">
@@ -185,16 +190,16 @@ export default function AboutUsSection({
             <div className="text-[10px] sm:text-xs text-neutral-400 mt-0.5">
               {stat.hint}
             </div>
-            <div className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-transparent via-indigo-500/40 to-transparent group-hover:via-indigo-400 transition-all" />
+            <div className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent group-hover:via-emerald-400 transition-all" />
           </motion.div>
         ))}
       </section>
 
       {/* ── Mission & Vision Statement ─────────────── */}
       <section className="p-6 sm:p-10 rounded-3xl bg-gradient-to-b from-neutral-900/70 to-neutral-950/70 border border-neutral-800/90 backdrop-blur-md relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
         <div className="relative z-10 max-w-3xl">
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-indigo-400 mb-2">
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-emerald-400 mb-2">
             <Award className="w-4 h-4" />
             Our Mission & Commitment
           </div>
@@ -203,7 +208,7 @@ export default function AboutUsSection({
           </h2>
           <p className="mt-4 text-xs sm:text-sm text-neutral-300 leading-relaxed">
             Enterprises frequently struggle with fragmented customer data trapped between core ERP
-            installations and customer-facing touchpoints. CXcel eliminates these boundaries. We combine
+            installations and customer-facing touchpoints. CX Studio eliminates these boundaries. We combine
             deep SAP functional domain mastery with cutting-edge integration pipelines (CPI), headless
             storefront architectures, and cloud-native BTP extensions.
           </p>
@@ -231,7 +236,7 @@ export default function AboutUsSection({
       {/* ── 4 Architectural Pillars ────────────────── */}
       <section className="space-y-6">
         <div className="text-center space-y-2">
-          <div className="text-xs font-semibold uppercase tracking-wider text-indigo-400">
+          <div className="text-xs font-semibold uppercase tracking-wider text-emerald-400">
             Core Architecture Competencies
           </div>
           <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
@@ -260,7 +265,7 @@ export default function AboutUsSection({
                 >
                   <Icon className={`w-5 h-5 ${pillar.iconColor}`} />
                 </div>
-                <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-indigo-300 transition-colors">
+                <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-emerald-300 transition-colors">
                   {pillar.title}
                 </h3>
                 <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed">
@@ -276,7 +281,7 @@ export default function AboutUsSection({
       <section className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
           <div>
-            <div className="text-xs font-semibold uppercase tracking-wider text-indigo-400">
+            <div className="text-xs font-semibold uppercase tracking-wider text-emerald-400">
               The Delivery Roster
             </div>
             <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
@@ -288,7 +293,7 @@ export default function AboutUsSection({
           </div>
           <button
             onClick={() => onSelectTab("members")}
-            className="text-xs font-semibold text-indigo-400 hover:text-indigo-300 flex items-center gap-1.5 flex-shrink-0 cursor-pointer"
+            className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 flex items-center gap-1.5 flex-shrink-0 cursor-pointer"
           >
             <span>Launch Interactive Rotary Dial</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -296,24 +301,24 @@ export default function AboutUsSection({
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
-          {portfolioData.subTeams
+          {subTeams
             .filter((st) => st.id !== "all")
             .map((subTeam) => (
               <div
                 key={subTeam.id}
                 onClick={() => handleDisciplineClick(subTeam)}
-                className="p-4 sm:p-5 rounded-2xl bg-neutral-900/60 hover:bg-neutral-900 border border-neutral-800/90 hover:border-indigo-500/40 transition-all duration-200 cursor-pointer group flex flex-col justify-between"
+                className="p-4 sm:p-5 rounded-2xl bg-neutral-900/60 hover:bg-neutral-900 border border-neutral-800/90 hover:border-emerald-500/40 transition-all duration-200 cursor-pointer group flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between gap-2 mb-2">
-                    <span className="text-[10px] font-mono font-bold text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/20">
+                    <span className="text-[10px] font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
                       {subTeam.shortCode}
                     </span>
                     <span className="text-[10px] text-neutral-500 group-hover:text-neutral-400">
                       Discipline
                     </span>
                   </div>
-                  <h4 className="text-sm font-bold text-white group-hover:text-indigo-300 transition-colors">
+                  <h4 className="text-sm font-bold text-white group-hover:text-emerald-300 transition-colors">
                     {subTeam.name}
                   </h4>
                   <p className="text-xs text-neutral-400 mt-1 line-clamp-2 leading-relaxed">
@@ -321,7 +326,7 @@ export default function AboutUsSection({
                   </p>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-neutral-800/80 flex items-center justify-between text-xs text-indigo-400 font-medium group-hover:text-indigo-300">
+                <div className="mt-4 pt-3 border-t border-neutral-800/80 flex items-center justify-between text-xs text-emerald-400 font-medium group-hover:text-emerald-300">
                   <span>View Practice Members</span>
                   <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                 </div>
@@ -333,7 +338,7 @@ export default function AboutUsSection({
       {/* ── Delivery Framework Roadmap ──────────────── */}
       <section className="space-y-6">
         <div className="text-center space-y-2">
-          <div className="text-xs font-semibold uppercase tracking-wider text-indigo-400">
+          <div className="text-xs font-semibold uppercase tracking-wider text-emerald-400">
             Lifecycle Methodology
           </div>
           <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
@@ -347,7 +352,7 @@ export default function AboutUsSection({
               key={idx}
               className="p-5 rounded-2xl bg-neutral-900/40 border border-neutral-800/80 relative space-y-2"
             >
-              <div className="text-2xl font-black text-indigo-500/40 font-mono">
+              <div className="text-2xl font-black text-emerald-500/40 font-mono">
                 {step.step}
               </div>
               <h4 className="text-sm font-bold text-white">{step.title}</h4>
@@ -360,7 +365,7 @@ export default function AboutUsSection({
       </section>
 
       {/* ── Bottom CTA Banner ──────────────────────── */}
-      <section className="p-8 sm:p-12 rounded-3xl bg-gradient-to-r from-indigo-950/60 via-neutral-900/80 to-neutral-950 border border-indigo-500/30 text-center space-y-4">
+      <section className="p-8 sm:p-12 rounded-3xl bg-gradient-to-r from-emerald-950/60 via-neutral-900/80 to-neutral-950 border border-emerald-500/30 text-center space-y-4">
         <h3 className="text-xl sm:text-3xl font-bold text-white tracking-tight">
           Ready to Modernize Your SAP CX Landscape?
         </h3>
@@ -371,7 +376,7 @@ export default function AboutUsSection({
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <button
             onClick={() => onSelectTab("members")}
-            className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-[0_0_20px_rgba(99,102,241,0.4)] transition-all cursor-pointer"
+            className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-[0_0_20px_rgba(16,185,129,0.4)] transition-all cursor-pointer"
           >
             Meet the Core Team
           </button>

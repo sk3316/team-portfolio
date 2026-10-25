@@ -24,7 +24,13 @@ export interface NormalizedMember {
   skills: string[];
   qualifications: string[];
   certifications: string[];
-  badges: { name: string; fallbackText?: string; color?: string }[];
+  badges: {
+    name: string;
+    fallbackText?: string;
+    color?: string;
+    logoUrl?: string;
+    base64?: string;
+  }[];
   featuredProjects: NormalizedProject[];
   socialLinks: {
     github?: string;

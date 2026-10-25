@@ -3,15 +3,16 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Sparkles,
+  Home,
   Users,
   Mail,
-  Layers,
   Menu,
   X,
   ArrowUpRight,
   ShieldCheck,
   Presentation,
+  RefreshCw,
+  Check,
 } from "lucide-react";
 
 export type NavTab = "home" | "members" | "contact";
@@ -22,6 +23,9 @@ interface HeaderProps {
   selectedSubTeamName?: string;
   memberCount?: number;
   onOpenPPTStudio?: () => void;
+  onSync?: () => Promise<void> | void;
+  isSyncing?: boolean;
+  isLiveSync?: boolean;
 }
 
 export default function Header({
@@ -30,26 +34,35 @@ export default function Header({
   selectedSubTeamName,
   memberCount,
   onOpenPPTStudio,
+  onSync,
+  isSyncing,
+  isLiveSync,
 }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [justSynced, setJustSynced] = useState(false);
 
-  const tabs: { id: NavTab; label: string; subLabel: string; icon: React.ElementType }[] = [
+  const handleSyncClick = async () => {
+    if (onSync && !isSyncing) {
+      await onSync();
+      setJustSynced(true);
+      setTimeout(() => setJustSynced(false), 2000);
+    }
+  };
+
+  const tabs: { id: NavTab; label: string; icon: React.ElementType }[] = [
     {
       id: "home",
       label: "Home",
-      subLabel: "About Us",
-      icon: Sparkles,
+      icon: Home,
     },
     {
       id: "members",
       label: "Members",
-      subLabel: "Core Portfolio",
       icon: Users,
     },
     {
       id: "contact",
       label: "Contact Us",
-      subLabel: "Get in Touch",
       icon: Mail,
     },
   ];
@@ -67,21 +80,20 @@ export default function Header({
           onClick={() => handleTabClick("home")}
           className="flex items-center gap-3 cursor-pointer group flex-shrink-0"
         >
-          <div className="relative">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-violet-700 flex items-center justify-center font-black text-xs sm:text-sm text-white tracking-wider shadow-[0_0_20px_rgba(99,102,241,0.45)] group-hover:shadow-[0_0_25px_rgba(99,102,241,0.7)] transition-all duration-300 group-hover:scale-105 border border-indigo-400/30">
-              CX
-            </div>
-            <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-400 border-2 border-neutral-950 rounded-full" />
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <img
+              src="/assets/images/deloitte-white.svg"
+              alt="Deloitte"
+              className="h-4 sm:h-5 w-auto object-contain transition-all duration-300 group-hover:scale-105"
+            />
+            <span className="h-5 w-px bg-neutral-800 hidden sm:inline-block" />
           </div>
 
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-sm sm:text-base font-bold tracking-tight text-white group-hover:text-indigo-300 transition-colors">
-                CXcel
+              <h1 className="text-sm sm:text-base font-bold tracking-tight text-white group-hover:text-emerald-300 transition-colors">
+                CX Studio
               </h1>
-              <span className="text-[10px] uppercase font-semibold tracking-wider text-indigo-400/90 bg-indigo-500/10 px-1.5 py-0.5 rounded border border-indigo-500/20 hidden md:inline-block">
-                Studio
-              </span>
             </div>
             <p className="text-[10px] sm:text-[11px] text-neutral-400 tracking-tight line-clamp-1 max-w-[200px] sm:max-w-none">
               SAP Customer Experience Studio
@@ -108,7 +120,7 @@ export default function Header({
                 {isActive && (
                   <motion.div
                     layoutId="headerActiveTab"
-                    className="absolute inset-0 rounded-full bg-gradient-to-r from-indigo-600/90 via-indigo-600 to-violet-600 shadow-[0_0_15px_rgba(99,102,241,0.5)] border border-indigo-400/30"
+                    className="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-600/90 via-emerald-600 to-teal-600 shadow-[0_0_15px_rgba(16,185,129,0.5)] border border-emerald-400/30"
                     transition={{ type: "spring", stiffness: 400, damping: 30 }}
                   />
                 )}
@@ -119,46 +131,43 @@ export default function Header({
                     }`}
                   />
                   <span className="font-semibold">{tab.label}</span>
-                  <span
-                    className={`text-[10px] transition-opacity ${
-                      isActive
-                        ? "text-indigo-200 opacity-90 font-normal"
-                        : "text-neutral-500 opacity-80"
-                    }`}
-                  >
-                    ({tab.subLabel})
-                  </span>
                 </span>
               </button>
             );
           })}
         </nav>
 
-        {/* ── Right Actions / Scope Info ──────────────────── */}
+        {/* ── Right Actions ──────────────────── */}
         <div className="flex items-center gap-2.5 sm:gap-3 flex-shrink-0">
-          {/* Members Scope indicator if on Members tab */}
-          {activeTab === "members" && selectedSubTeamName && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="hidden lg:flex items-center gap-2 bg-neutral-900/80 border border-neutral-800 px-3 py-1.5 rounded-full text-xs text-neutral-400"
+          {/* Direct 1-Click Sync Button */}
+          {onSync && (
+            <button
+              type="button"
+              onClick={handleSyncClick}
+              disabled={isSyncing}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold transition-all duration-200 cursor-pointer disabled:opacity-60 shadow-sm ${
+                justSynced
+                  ? "bg-emerald-950/60 border-emerald-500/50 text-emerald-300"
+                  : "bg-neutral-900/90 hover:bg-neutral-800 border-neutral-800 hover:border-emerald-500/40 text-neutral-300 hover:text-white"
+              }`}
+              title="Click to directly sync latest changes from Google Sheets"
             >
-              <Layers className="w-3.5 h-3.5 text-indigo-400" />
-              <span>
-                Scope:{" "}
-                <strong className="text-white font-medium">
-                  {selectedSubTeamName}
-                </strong>
-              </span>
-              {typeof memberCount === "number" && (
-                <>
-                  <span className="w-1 h-1 rounded-full bg-neutral-600" />
-                  <span className="text-indigo-400 font-medium">
-                    {memberCount} {memberCount === 1 ? "expert" : "experts"}
-                  </span>
-                </>
+              {justSynced ? (
+                <Check className="w-3.5 h-3.5 text-emerald-400" />
+              ) : (
+                <RefreshCw
+                  className={`w-3.5 h-3.5 text-emerald-400 ${
+                    isSyncing ? "animate-spin" : ""
+                  }`}
+                />
               )}
-            </motion.div>
+              <span className="hidden sm:inline">
+                {isSyncing ? "Syncing..." : justSynced ? "Synced!" : "Sync Data"}
+              </span>
+              {isLiveSync && !justSynced && (
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse ml-0.5" />
+              )}
+            </button>
           )}
 
           {/* PPT Studio Button */}
@@ -166,9 +175,9 @@ export default function Header({
             <button
               type="button"
               onClick={onOpenPPTStudio}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-950/60 hover:bg-indigo-900/80 border border-indigo-500/40 text-xs font-semibold text-indigo-300 hover:text-white transition-all duration-200 shadow-[0_0_12px_rgba(99,102,241,0.2)] cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-950/60 hover:bg-emerald-900/80 border border-emerald-500/40 text-xs font-semibold text-emerald-300 hover:text-white transition-all duration-200 shadow-[0_0_12px_rgba(16,185,129,0.2)] cursor-pointer"
             >
-              <Presentation className="w-3.5 h-3.5 text-indigo-400" />
+              <Presentation className="w-3.5 h-3.5 text-emerald-400" />
               <span>PPT Studio</span>
             </button>
           )}
@@ -180,7 +189,7 @@ export default function Header({
               className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 text-xs font-medium text-neutral-200 hover:text-white transition-all duration-200 hover:border-neutral-700"
             >
               <span>Consult Studio</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-indigo-400" />
+              <ArrowUpRight className="w-3.5 h-3.5 text-emerald-400" />
             </button>
           )}
 
@@ -223,7 +232,7 @@ export default function Header({
                   onClick={() => handleTabClick(tab.id)}
                   className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-left transition-all ${
                     isActive
-                      ? "bg-indigo-600/15 border border-indigo-500/30 text-white"
+                      ? "bg-emerald-600/15 border border-emerald-500/30 text-white"
                       : "text-neutral-400 hover:text-white hover:bg-neutral-900/60"
                   }`}
                 >
@@ -231,7 +240,7 @@ export default function Header({
                     <div
                       className={`w-8 h-8 rounded-lg flex items-center justify-center ${
                         isActive
-                          ? "bg-indigo-600 text-white shadow-[0_0_10px_rgba(99,102,241,0.4)]"
+                          ? "bg-emerald-600 text-white shadow-[0_0_10px_rgba(16,185,129,0.4)]"
                           : "bg-neutral-900 text-neutral-400"
                       }`}
                     >
@@ -239,17 +248,55 @@ export default function Header({
                     </div>
                     <div>
                       <div className="text-sm font-semibold">{tab.label}</div>
-                      <div className="text-[11px] text-neutral-400">
-                        {tab.subLabel}
-                      </div>
                     </div>
                   </div>
                   {isActive && (
-                    <div className="w-2 h-2 rounded-full bg-indigo-400 shadow-[0_0_8px_rgba(99,102,241,0.8)]" />
+                    <div className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
                   )}
                 </button>
               );
             })}
+
+            {onSync && (
+              <button
+                type="button"
+                onClick={async () => {
+                  await handleSyncClick();
+                  setMobileMenuOpen(false);
+                }}
+                disabled={isSyncing}
+                className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-left bg-neutral-900 border border-neutral-800 text-neutral-200 hover:text-white transition-all disabled:opacity-60"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-emerald-600/20 text-emerald-400 border border-emerald-500/30">
+                    {justSynced ? (
+                      <Check className="w-4 h-4 text-emerald-400" />
+                    ) : (
+                      <RefreshCw
+                        className={`w-4 h-4 ${isSyncing ? "animate-spin" : ""}`}
+                      />
+                    )}
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-white flex items-center gap-1.5">
+                      <span>
+                        {isSyncing
+                          ? "Syncing Data..."
+                          : justSynced
+                          ? "Data Synced!"
+                          : "Sync Data"}
+                      </span>
+                      {isLiveSync && !justSynced && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      )}
+                    </div>
+                    <div className="text-[11px] text-neutral-400">
+                      Directly sync changes from Google Sheets
+                    </div>
+                  </div>
+                </div>
+              </button>
+            )}
 
             {onOpenPPTStudio && (
               <button
@@ -258,15 +305,15 @@ export default function Header({
                   onOpenPPTStudio();
                   setMobileMenuOpen(false);
                 }}
-                className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-left bg-indigo-950/50 border border-indigo-500/40 text-indigo-200 hover:text-white transition-all"
+                className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-left bg-emerald-950/50 border border-emerald-500/40 text-emerald-200 hover:text-white transition-all"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-indigo-600 text-white shadow-[0_0_10px_rgba(99,102,241,0.4)]">
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-emerald-600 text-white shadow-[0_0_10px_rgba(16,185,129,0.4)]">
                     <Presentation className="w-4 h-4" />
                   </div>
                   <div>
                     <div className="text-sm font-semibold text-white">PPT Studio</div>
-                    <div className="text-[11px] text-indigo-300">Generate & Duplicate Presentations</div>
+                    <div className="text-[11px] text-emerald-300">Generate & Duplicate Presentations</div>
                   </div>
                 </div>
               </button>
@@ -277,7 +324,7 @@ export default function Header({
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
                 Enterprise SLA 99.9%
               </span>
-              <span className="text-neutral-500">CXcel Studio 2026</span>
+              <span className="text-neutral-500">CX Studio 2026</span>
             </div>
           </motion.div>
         )}

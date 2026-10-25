@@ -13,11 +13,7 @@ import {
   HelpCircle,
   ChevronDown,
   Building2,
-  Calendar,
-  Sparkles,
-  ArrowRight,
 } from "lucide-react";
-import { portfolioData } from "@/data/portfolio-data";
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
@@ -46,7 +42,7 @@ export default function ContactSection() {
 
   const faqs = [
     {
-      question: "How quickly can CXcel team members onboard into an active engagement?",
+      question: "How quickly can CX Studio team members onboard into an active engagement?",
       answer:
         "Depending on the practice stream, our architects and leads can be deployed within 5 to 10 business days. For specialized CPI or Commerce Cloud hypercare, emergency triage pods can initiate engagement within 48 hours.",
     },
@@ -71,13 +67,13 @@ export default function ContactSection() {
     <div className="w-full py-8 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16 sm:space-y-24 select-none">
       {/* ── Page Header ────────────────────────────── */}
       <div className="text-center space-y-4 max-w-3xl mx-auto">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/25 text-indigo-300 text-xs font-medium backdrop-blur-sm">
-          <Mail className="w-3.5 h-3.5 text-indigo-400" />
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-300 text-xs font-medium backdrop-blur-sm">
+          <Mail className="w-3.5 h-3.5 text-emerald-400" />
           <span>Enterprise Practice Consultation</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white">
           Connect With Our{" "}
-          <span className="bg-gradient-to-r from-indigo-400 via-violet-300 to-cyan-300 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-300 bg-clip-text text-transparent">
             Practice Architects
           </span>
         </h1>
@@ -92,8 +88,8 @@ export default function ContactSection() {
         {/* ── Left Column: Contact Details & Delivery Hubs (5 cols) ── */}
         <div className="lg:col-span-5 space-y-6">
           {/* SLA Commitment Card */}
-          <div className="p-5 sm:p-6 rounded-2xl bg-neutral-900/60 border border-indigo-500/30 backdrop-blur-md space-y-3 relative overflow-hidden">
-            <div className="flex items-center gap-2.5 text-indigo-400 font-semibold text-xs uppercase tracking-wider">
+          <div className="p-5 sm:p-6 rounded-2xl bg-neutral-900/60 border border-emerald-500/30 backdrop-blur-md space-y-3 relative overflow-hidden">
+            <div className="flex items-center gap-2.5 text-emerald-400 font-semibold text-xs uppercase tracking-wider">
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
               <span>Architect Response Guarantee</span>
             </div>
@@ -114,18 +110,18 @@ export default function ContactSection() {
 
             <div className="space-y-4 text-xs">
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <Mail className="w-4 h-4 text-indigo-400" />
+                <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <Mail className="w-4 h-4 text-emerald-400" />
                 </div>
                 <div>
                   <div className="font-semibold text-neutral-200">
                     Practice Inquiries
                   </div>
                   <a
-                    href="mailto:contact@cxcel.io"
-                    className="text-indigo-400 hover:underline"
+                    href="mailto:contact@cxstudio.io"
+                    className="text-emerald-400 hover:underline"
                   >
-                    contact@cxcel.io
+                    contact@cxstudio.io
                   </a>
                   <div className="text-[10px] text-neutral-500 mt-0.5">
                     Architecture briefs & RFP submissions
@@ -134,8 +130,8 @@ export default function ContactSection() {
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <Phone className="w-4 h-4 text-indigo-400" />
+                <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <Phone className="w-4 h-4 text-emerald-400" />
                 </div>
                 <div>
                   <div className="font-semibold text-neutral-200">
@@ -151,8 +147,8 @@ export default function ContactSection() {
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <Clock className="w-4 h-4 text-indigo-400" />
+                <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <Clock className="w-4 h-4 text-emerald-400" />
                 </div>
                 <div>
                   <div className="font-semibold text-neutral-200">
@@ -178,21 +174,21 @@ export default function ContactSection() {
             <div className="space-y-4 text-xs">
               <div className="flex items-start gap-3">
                 <div className="w-8 h-8 rounded-lg bg-neutral-800 border border-neutral-700 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <MapPin className="w-4 h-4 text-indigo-400" />
+                  <MapPin className="w-4 h-4 text-emerald-400" />
                 </div>
                 <div>
                   <div className="font-semibold text-neutral-200">
-                    Global Technology Centre (India)
+                    Bangalore Studio Headquarters
                   </div>
                   <p className="text-neutral-400 mt-0.5 leading-relaxed text-[11px]">
-                    Outer Ring Road, Bellandur, Bengaluru, Karnataka 560103
+                    Prestige Trade Tower, High Grounds, Palace Road, Bengaluru, Karnataka — 560001
                   </p>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
                 <div className="w-8 h-8 rounded-lg bg-neutral-800 border border-neutral-700 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <Building2 className="w-4 h-4 text-indigo-400" />
+                  <Building2 className="w-4 h-4 text-emerald-400" />
                 </div>
                 <div>
                   <div className="font-semibold text-neutral-200">
@@ -223,7 +219,7 @@ export default function ContactSection() {
               </h3>
               <p className="text-xs sm:text-sm text-neutral-400 max-w-md mx-auto leading-relaxed">
                 Thank you, <strong className="text-white">{formData.name}</strong>. Your consultation
-                request for <span className="text-indigo-400">{formData.company || "your organization"}</span> has
+                request for <span className="text-emerald-400">{formData.company || "your organization"}</span> has
                 been routed to our practice lead. We will review your scope and respond within 24 business hours.
               </p>
               <button
@@ -267,7 +263,7 @@ export default function ContactSection() {
                     onChange={(e) =>
                       setFormData({ ...formData, name: e.target.value })
                     }
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-950 border border-neutral-800 text-xs text-white placeholder-neutral-500 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-950 border border-neutral-800 text-xs text-white placeholder-neutral-500 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all"
                   />
                 </div>
 
@@ -283,7 +279,7 @@ export default function ContactSection() {
                     onChange={(e) =>
                       setFormData({ ...formData, email: e.target.value })
                     }
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-950 border border-neutral-800 text-xs text-white placeholder-neutral-500 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-950 border border-neutral-800 text-xs text-white placeholder-neutral-500 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all"
                   />
                 </div>
               </div>
@@ -300,7 +296,7 @@ export default function ContactSection() {
                     onChange={(e) =>
                       setFormData({ ...formData, company: e.target.value })
                     }
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-950 border border-neutral-800 text-xs text-white placeholder-neutral-500 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-950 border border-neutral-800 text-xs text-white placeholder-neutral-500 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all"
                   />
                 </div>
 
@@ -313,7 +309,7 @@ export default function ContactSection() {
                     onChange={(e) =>
                       setFormData({ ...formData, practice: e.target.value })
                     }
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-950 border border-neutral-800 text-xs text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-950 border border-neutral-800 text-xs text-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all"
                   >
                     <option value="cpi">SAP CPI & Integration (iFlows / B2B)</option>
                     <option value="commerce">SAP Commerce Cloud & Headless</option>
@@ -344,7 +340,7 @@ export default function ContactSection() {
                       }
                       className={`px-3 py-2 rounded-xl text-[11px] font-medium border text-center transition-all cursor-pointer ${
                         formData.timeline === tl.id
-                          ? "bg-indigo-600/20 border-indigo-500 text-indigo-200"
+                          ? "bg-emerald-600/20 border-emerald-500 text-emerald-200"
                           : "bg-neutral-950 border-neutral-800 text-neutral-400 hover:text-neutral-300"
                       }`}
                     >
@@ -366,14 +362,14 @@ export default function ContactSection() {
                   onChange={(e) =>
                     setFormData({ ...formData, message: e.target.value })
                   }
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-950 border border-neutral-800 text-xs text-white placeholder-neutral-500 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all resize-none"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-950 border border-neutral-800 text-xs text-white placeholder-neutral-500 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all resize-none"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold text-xs shadow-[0_0_20px_rgba(99,102,241,0.4)] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold text-xs shadow-[0_0_20px_rgba(16,185,129,0.4)] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
               >
                 {isSubmitting ? (
                   <span className="flex items-center gap-2">
@@ -399,7 +395,7 @@ export default function ContactSection() {
       {/* ── FAQ Section ────────────────────────────── */}
       <div className="space-y-6 max-w-4xl mx-auto pt-8 border-t border-neutral-800">
         <div className="text-center space-y-2">
-          <div className="text-xs font-semibold uppercase tracking-wider text-indigo-400 flex items-center justify-center gap-1.5">
+          <div className="text-xs font-semibold uppercase tracking-wider text-emerald-400 flex items-center justify-center gap-1.5">
             <HelpCircle className="w-3.5 h-3.5" />
             Enterprise Engagement FAQs
           </div>
@@ -419,12 +415,12 @@ export default function ContactSection() {
                 <button
                   type="button"
                   onClick={() => setExpandedFaq(isOpen ? null : idx)}
-                  className="w-full px-5 py-4 flex items-center justify-between text-left text-xs sm:text-sm font-semibold text-white hover:text-indigo-300 transition-colors cursor-pointer"
+                  className="w-full px-5 py-4 flex items-center justify-between text-left text-xs sm:text-sm font-semibold text-white hover:text-emerald-300 transition-colors cursor-pointer"
                 >
                   <span>{faq.question}</span>
                   <ChevronDown
                     className={`w-4 h-4 text-neutral-400 transition-transform duration-200 flex-shrink-0 ${
-                      isOpen ? "rotate-180 text-indigo-400" : ""
+                      isOpen ? "rotate-180 text-emerald-400" : ""
                     }`}
                   />
                 </button>

@@ -3,7 +3,8 @@
 
 import React from "react";
 import Image from "next/image";
-import { SubTeam, TeamMember, getMembersBySubTeam } from "@/data/portfolio-data";
+import { SubTeam, TeamMember } from "@/data/portfolio-data";
+import { usePortfolio } from "@/components/PortfolioContext";
 import { Users } from "lucide-react";
 
 interface MobileNavigationProps {
@@ -23,6 +24,7 @@ export default function MobileNavigation({
   selectedMemberId,
   onSelectMember,
 }: MobileNavigationProps) {
+  const { getMembersBySubTeam } = usePortfolio();
   return (
     <div className="w-full flex flex-col gap-2.5 px-4 py-3 bg-neutral-950/90 border-b border-neutral-900/80 backdrop-blur-xl xl:hidden z-20 flex-shrink-0">
       {/* Sub-Team Horizontal Pill Rail */}
@@ -37,7 +39,7 @@ export default function MobileNavigation({
               onClick={() => onSelectSubTeam(team)}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap flex items-center gap-2 transition-all flex-shrink-0 cursor-pointer ${
                 isSelected
-                  ? "bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-[0_0_15px_rgba(99,102,241,0.45)] border border-indigo-400"
+                  ? "bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-[0_0_15px_rgba(16,185,129,0.45)] border border-emerald-400"
                   : "bg-neutral-900/90 text-neutral-400 border border-neutral-800 hover:text-white hover:border-neutral-700"
               }`}
             >
@@ -73,7 +75,7 @@ export default function MobileNavigation({
               <div
                 className={`relative w-11 h-11 rounded-full p-0.5 transition-all duration-200 ${
                   isSelected
-                    ? "ring-2 ring-indigo-500 shadow-[0_0_16px_rgba(99,102,241,0.6)] border-2 border-indigo-400 scale-105"
+                    ? "ring-2 ring-emerald-500 shadow-[0_0_16px_rgba(16,185,129,0.6)] border-2 border-emerald-400 scale-105"
                     : "border border-neutral-800 opacity-60 group-hover:opacity-100 group-hover:border-neutral-700"
                 }`}
               >
@@ -88,7 +90,7 @@ export default function MobileNavigation({
               <span
                 className={`text-[10px] font-medium tracking-tight max-w-[68px] truncate transition-colors ${
                   isSelected
-                    ? "text-indigo-300 font-semibold"
+                    ? "text-emerald-300 font-semibold"
                     : "text-neutral-400 group-hover:text-neutral-300"
                 }`}
               >

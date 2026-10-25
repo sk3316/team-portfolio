@@ -10,7 +10,7 @@ import {
   ChevronDown,
   Sparkles,
 } from "lucide-react";
-import { TeamMember, portfolioData } from "@/data/portfolio-data";
+import { TeamMember } from "@/data/portfolio-data";
 import { normalizeMemberData } from "@/lib/pptx/normalizeMemberData";
 import { downloadCandidatePPT } from "@/lib/pptx/nativePptxGenerator";
 
@@ -19,6 +19,7 @@ interface PPTStudioModalProps {
   onClose: () => void;
   activeMember: TeamMember | null;
   onSelectMember?: (memberId: string) => void;
+  members?: TeamMember[];
 }
 
 export default function PPTStudioModal({
@@ -26,26 +27,31 @@ export default function PPTStudioModal({
   onClose,
   activeMember,
   onSelectMember,
+  members,
 }: PPTStudioModalProps) {
-  // Current candidate selection from codebase JSON
-  const [selectedId, setSelectedId] = useState<string>(activeMember?.id || portfolioData.members[0].id);
+  const memberList = members && members.length > 0 ? members : (activeMember ? [activeMember] : []);
+
+  // Current candidate selection from live Google Sheet
+  const [selectedId, setSelectedId] = useState<string>(activeMember?.id || memberList[0]?.id || "");
+  const [prevActiveId, setPrevActiveId] = useState<string | undefined>(activeMember?.id);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  // Sync selectedId when activeMember changes externally
-  React.useEffect(() => {
+  // Sync selectedId when activeMember changes externally without cascading effect renders
+  if (activeMember?.id !== prevActiveId) {
+    setPrevActiveId(activeMember?.id);
     if (activeMember?.id) {
       setSelectedId(activeMember.id);
     }
-  }, [activeMember?.id]);
+  }
 
-  // Derive current member object strictly from codebase JSON
+  // Derive current member object strictly from memberList
   const currentRawMember = useMemo(() => {
     return (
-      portfolioData.members.find((m) => m.id === selectedId) ||
+      memberList.find((m) => m.id === selectedId) ||
       activeMember ||
-      portfolioData.members[0]
+      memberList[0]
     );
-  }, [selectedId, activeMember]);
+  }, [selectedId, activeMember, memberList]);
 
   const normalized = useMemo(() => {
     return normalizeMemberData(currentRawMember);
@@ -98,7 +104,7 @@ export default function PPTStudioModal({
           {/* ── Modal Header ── */}
           <div className="px-5 sm:px-7 py-4 border-b border-neutral-800/90 bg-neutral-900/95 flex flex-col sm:flex-row sm:items-center justify-between gap-3 flex-shrink-0">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 to-indigo-600 flex items-center justify-center shadow-[0_0_20px_rgba(14,165,233,0.35)] text-white">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 via-teal-600 to-emerald-700 flex items-center justify-center shadow-[0_0_20px_rgba(16,185,129,0.35)] text-white">
                 <Presentation className="w-5 h-5" />
               </div>
               <div>
@@ -124,7 +130,7 @@ export default function PPTStudioModal({
                   onChange={handleMemberChange}
                   className="appearance-none bg-neutral-800 border border-neutral-700 text-white text-xs font-semibold py-1.5 pl-3 pr-8 rounded-xl focus:outline-none focus:border-sky-500 cursor-pointer shadow-sm hover:bg-neutral-800/80 transition-colors"
                 >
-                  {portfolioData.members.map((m) => (
+                  {memberList.map((m) => (
                     <option key={m.id} value={m.id} className="bg-neutral-900 text-white">
                       {m.name} ({m.role.split("&")[0].trim()})
                     </option>
@@ -283,7 +289,7 @@ export default function PPTStudioModal({
                 <button
                   onClick={handleDownloadOfficial}
                   disabled={isGenerating}
-                  className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-sky-500 via-sky-600 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(14,165,233,0.35)] transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 cursor-pointer"
+                  className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-600 to-emerald-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.35)] transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 cursor-pointer"
                 >
                   {isGenerating ? (
                     <>
